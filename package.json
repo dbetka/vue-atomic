@@ -1,8 +1,48 @@
 {
-  "name": "@dominik.betka/vue-atomic",
+  "name": "vue-atomic",
   "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Drego31/vue-atomic.git"
-  }
+  },
+  "description": "Atomic Design for Vue.js",
+  "license": "MIT",
+  "author": {
+    "name": "Drego31",
+    "email": "dominik.betka@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/Drego31/vue-atomic/issues"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/vue-material.js",
+  "module": "dist/vue-material.js",
+  "scripts": {
+    "dev": "babel-node build/local",
+    "build": "rm -rf dist/ && babel-node build/lib",
+    "docs": "babel-node build/docs",
+    "lint": "eslint --ext .js,.vue docs src build test --fix",
+    "test": "jest",
+    "coverage": "yarn test --coverage",
+    "githooks": "sh build/git-hooks/install.sh",
+    "changelog": "babel-node build/generate-changelog.js",
+    "release": "sh build/release.sh",
+    "new-component": "babel-node build/new-component.js",
+    "github-release": "github-release",
+    "commit": "git-cz"
+  },
+  "engines": {
+    "node": ">= 7.0"
+  },
+  "peerDependencies": {
+    "vue": "^2.5.0"
+  },
+  "devDependencies": {
+  },
+  "browserslist": [
+    "> 1%"
+  ]
 }
