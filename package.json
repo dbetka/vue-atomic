@@ -21,18 +21,10 @@
   "main": "dist/atoms/button.vue",
   "module": "dist/",
   "scripts": {
-    "dev": "babel-node build/local",
-    "build": "rm -rf dist/ && babel-node build/lib",
-    "docs": "babel-node build/docs",
-    "lint": "eslint --ext .js,.vue docs src build test --fix",
-    "test": "jest",
-    "coverage": "yarn test --coverage",
-    "githooks": "sh build/git-hooks/install.sh",
-    "changelog": "babel-node build/generate-changelog.js",
-    "release": "sh build/release.sh",
-    "new-component": "babel-node build/new-component.js",
-    "github-release": "github-release",
-    "commit": "git-cz"
+    "build": "npm run build:umd & npm run build:es & npm run build:unpkg",
+    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/my-component.umd.js",
+    "build:es": "rollup --config build/rollup.config.js --format es --file dist/my-component.esm.js",
+    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/my-component.min.js"
   },
   "engines": {
     "node": ">= 7.0"
@@ -41,6 +33,21 @@
     "vue": "^2.5.0"
   },
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-vue": "^6.2.2",
+    "node": "^13.11.0",
+    "rollup": "^2.2.0",
+    "rollup-plugin-buble": "^0.19.8",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-vue": "^5.1.6",
+    "vue": "^2.6.11",
+    "vue-template-compiler": "^2.6.11"
   },
   "browserslist": [
     "> 1%"

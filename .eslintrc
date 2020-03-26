@@ -28,6 +28,10 @@
     "vue/html-indent": [
       "error",
       2
+    ],
+    "vue/script-indent": [
+      "error",
+      2
     ]
   }
 }
