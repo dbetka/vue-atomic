@@ -22,9 +22,9 @@
   "module": "dist/",
   "scripts": {
     "build": "npm run build:umd & npm run build:es & npm run build:unpkg",
-    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/my-component.umd.js",
-    "build:es": "rollup --config build/rollup.config.js --format es --file dist/my-component.esm.js",
-    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/my-component.min.js"
+    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/button.umd.js",
+    "build:es": "rollup --config build/rollup.config.js --format es --file dist/button.esm.js",
+    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/button.min.js"
   },
   "engines": {
     "node": ">= 7.0"
