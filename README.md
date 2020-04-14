@@ -1,4 +1,4 @@
-# vue-atomic
+# vue-atomic (is not finished)
 The most flexible Vue UI Library
 
 ## Installation
@@ -18,14 +18,14 @@ Vue.use(VueAtomic)
 with default name
 ```js
 import {AButton} from 'vue-atomic'
-import 'vue-atomic/dist/atoms/button.sass'
+import 'vue-atomic/dist/atoms/button.sass' // file not exists yet
 
 Vue.component(AButton.name, AButton) // component name is a-button
 ```
 with own name
 ```js
 import {AButton} from 'vue-atomic'
-import 'vue-atomic/dist/atoms/button.sass'
+import 'vue-atomic/dist/atoms/button.sass' // file not exists yet
 
 Vue.component('new-button', AButton) // component name is new-button
 ```
