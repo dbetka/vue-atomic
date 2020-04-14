@@ -1,4 +1,4 @@
-# vue-atomic (is not finished)
+# vue-atomic (beta version)
 The most flexible Vue UI Library
 
 ## Installation
