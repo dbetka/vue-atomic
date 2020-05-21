@@ -1,7 +1,11 @@
-import AButton2 from './atoms/button.vue';
+import MInput from './molecules/input.vue';
+import MSelect from './molecules/select.vue';
+import MTextarea from './molecules/textarea.vue';
 
 const components = {
-  AButton2,
+  MInput,
+  MSelect,
+  MTextarea,
 };
 
 export default {
