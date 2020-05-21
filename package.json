@@ -1,6 +1,6 @@
 {
   "name": "vue-atomic",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Atomic Design for Vue.js",
   "license": "MIT",
   "main": "./dist/index.js",

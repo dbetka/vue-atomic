@@ -1,7 +1,7 @@
 <template>
   <button
     @click="$emit('click')"
-    class="a-button"
+    class="a-button2"
   >
     <slot/>
   </button>
@@ -9,6 +9,12 @@
 
 <script>
   export default {
-    name: 'a-button',
+    name: 'a-button2',
+    props: {
+      text: {
+        type: String,
+        default: '',
+      }
+    }
   };
 </script>

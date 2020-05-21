@@ -1,7 +1,7 @@
-import AButton from './atoms/button.vue';
+import AButton2 from './atoms/button.vue';
 
 const components = {
-  AButton,
+  AButton2,
 };
 
 export default {

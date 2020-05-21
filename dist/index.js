@@ -13,8 +13,15 @@
 //
 //
 //
+//
 var script = {
-  name: 'a-button'
+  name: 'a-button2',
+  props: {
+    text: {
+      type: String,
+      "default": ''
+    }
+  }
 };
 
 function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
@@ -104,6 +111,7 @@ var __vue_render__ = function __vue_render__() {
   var _c = _vm._self._c || _h;
 
   return _c('button', {
+    staticClass: "a-button2",
     on: {
       "click": function click($event) {
         return _vm.$emit('click');
@@ -137,7 +145,7 @@ var __vue_component__ = normalizeComponent({
 }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, false, undefined, undefined, undefined);
 
 var components = {
-  AButton: __vue_component__
+  AButton2: __vue_component__
 };
 var index = Object.assign({}, components, {
   install: function install(Vue, options) {
