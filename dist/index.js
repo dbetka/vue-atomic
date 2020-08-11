@@ -1,6 +1,6 @@
 /*!
- * @dominik.betka/vue-atomic v1.0.3
- * (c) dominik.betka
+ * @dbetka/vue-atomic v0.0.1
+ * (c) dbetka
  * Released under the MIT License.
  */
 'use strict';

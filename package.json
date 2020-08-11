@@ -1,11 +1,11 @@
 {
-  "name": "@dominik.betka/vue-atomic",
-  "version": "1.0.3",
-  "description": "Atomic Design for Vue.js",
+  "name": "@dbetka/vue-atomic",
+  "version": "0.0.1",
+  "description": "Atomic Design widgets for Vue.js",
   "license": "MIT",
   "main": "./dist/index.js",
   "scripts": {
-    "dev": "vue serve NiceHandsomeButton.vue",
+    "dev": "",
     "build": "npx bili --bundle-node-modules"
   },
   "files": [
@@ -15,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/dbetka/vue-atomic.git"
   },
-  "author": "dominik.betka",
+  "author": "dbetka",
   "bugs": {
     "url": "https://github.com/dbetka/vue-atomic/issues"
   },
