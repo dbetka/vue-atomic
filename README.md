@@ -3,29 +3,33 @@ The most flexible Vue UI Library
 
 ## Installation
 ```
-npm i -D @dominik.betka/vue-atomic
+npm i -D @dbetka/vue-atomic
 ```
 
 ## Using
 #### Add all components
 ```js
-import VueAtomic from 'vue-atomic'
-import 'vue-atomic/dist/style.css'
+import VueAtomic from '@dbetka/vue-atomic'
+import '@dbetka/vue-atomic/dist/style.sass'
 
 Vue.use(VueAtomic)
 ```
 ### Add single component
 with default name
 ```js
-import {AButton} from 'vue-atomic'
-import 'vue-atomic/dist/atoms/button.sass' // file not exists yet
+import { MInput } from '@dbetka/vue-atomic'
+import 'vue-atomic/dist/style.sass'
 
-Vue.component(AButton.name, AButton) // component name is a-button
+Vue.component(MInput.name, MInput) // component name is m-input
 ```
 with own name
 ```js
-import {AButton} from 'vue-atomic'
-import 'vue-atomic/dist/atoms/button.sass' // file not exists yet
+import { MInput } from '@dbetka/vue-atomic'
+import '@dbetka/vue-atomic/dist/style.sass'
 
-Vue.component('new-button', AButton) // component name is new-button
+Vue.component('new-input', MInput) // component name is new-input
 ```
+
+## List of widgets
+- MInput
+- MTextarea
