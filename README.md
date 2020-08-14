@@ -162,21 +162,29 @@ Events:
   }
 </script>
 ```
+#### Props
 
-Props:
-- **v-model**: String|Boolean|Number | **default**: undefined
-- _in future_ // ~~**disabled**: Boolean | **default**: false~~
-- **placeholder**: String | **default**: ''
-- **error**: Boolean | **default**: false
-- **correct**: Boolean | **default**: false
-- **assist**: String | **default**: ''
+Name         |      Description      | Type     | Default | Required
+-------------|-----------------------|----------|---------|----------
+v-model      | The model variable to bind the input value. | String, Boolean, Number | undefined | Yes
+~~disabled~~ | **In future** - Disable the input and prevent it interactions. | Boolean | false | No
+placeholder  | The input placeholder. Similar to HTML5 placeholder attribute. | String | '' | No
+error        | The status changes text field border, label and assist text color to red. | Boolean | false | No
+correct      | The status changes text field border and label color to red. | Boolean | false | No
+assist       | The assist message below text field. | String  | '' |  No
 
-Classes:
-- m-input
-- a-field f-textarea f-filled f-error f-correct
-- a-label f-field f-error f-correct
-- a-assist f-error f-correct
-- a-icon f-input f-error f-correct
+#### Classes
 
-Events:
-- input: contains selector value
+Name      | Features            | Related to state  | Description      
+----------|---------------------|-------------------|--------------
+m-input   |                     |                   | some
+a-field   | f-textarea f-filled | f-error f-correct | some
+a-label   | f-field             | f-error f-correct | some
+a-assist  |                     | f-error           | some
+a-icon    | f-input             | f-error f-correct | some
+
+#### Events
+
+Name     | Description      
+---------|-------------
+input    | Contains selector value
