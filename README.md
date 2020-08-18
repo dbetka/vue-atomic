@@ -1,5 +1,6 @@
 # vue-atomic (pre-alpha version)
-The most flexible Vue UI Library
+The most flexible Vue UI Library.
+Link to [npm package](https://www.npmjs.com/package/@dbetka/vue-atomic).
 
 ## Installation
 ```
@@ -95,24 +96,33 @@ Vue.component('new-input', MInput) // component name is new-input
 </script>
 ```
 
-Props:
-- **v-model**: String|Boolean|Number | **default**: undefined
-- **disabled**: Boolean | **default**: false
-- **placeholder**: String | **default**: ''
-- **type**: String | **default**: ''
-- **error**: Boolean | **default**: false
-- **correct**: Boolean | **default**: false
-- **assist**: String | **default**: ''
+#### Props
 
-Classes:
-- m-input
-- a-field f-filled f-error f-correct
-- a-label f-field f-error f-correct
-- a-assist f-error
-- a-icon f-input f-error f-correct
+Name         |      Description                                                             | Type                      | Default   | Required
+-------------|------------------------------------------------------------------------------|---------------------------|-----------|:--------:
+v-model      | The model variable to bind the input value.                                  | String, Boolean, Number   | undefined | Yes
+disabled     | **In future** - Disable the input and prevent it interactions.               | Boolean                   | false     | No
+placeholder  | The input placeholder. Similar to HTML5 placeholder attribute.               | String                    | ''        | No
+type         | The input type. Similar to HTML5 type attribute.                             | String                    | false     | No
+error        | The status changes text field border, label and assist text color to red.    | Boolean                   | false     | No
+correct      | The status changes text field border and label color to red.                 | Boolean                   | false     | No
+assist       | The assist message below text field.                                         | String                    | ''        | No
 
-Events:
-- input: contains selector value
+#### Classes
+
+Name      | Features            | Related to state  | Description      
+----------|---------------------|-------------------|:------------:
+m-input   |                     |                   | - 
+a-field   | f-textarea f-filled | f-error f-correct | - 
+a-label   | f-field             | f-error f-correct | - 
+a-assist  |                     | f-error           | - 
+a-icon    | f-input             | f-error f-correct | - 
+
+#### Events
+
+Name     | Description      
+---------|--------------------------
+input    | Contains selector value.
 
 
 ### MTextarea
@@ -162,29 +172,30 @@ Events:
   }
 </script>
 ```
+
 #### Props
 
-Name         |      Description      | Type     | Default | Required
--------------|-----------------------|----------|---------|----------
-v-model      | The model variable to bind the input value. | String, Boolean, Number | undefined | Yes
-~~disabled~~ | **In future** - Disable the input and prevent it interactions. | Boolean | false | No
-placeholder  | The input placeholder. Similar to HTML5 placeholder attribute. | String | '' | No
-error        | The status changes text field border, label and assist text color to red. | Boolean | false | No
-correct      | The status changes text field border and label color to red. | Boolean | false | No
-assist       | The assist message below text field. | String  | '' |  No
+Name         |      Description                                                             | Type                      | Default   | Required
+-------------|------------------------------------------------------------------------------|---------------------------|-----------|:--------:
+v-model      | The model variable to bind the input value.                                  | String, Boolean, Number   | undefined | Yes
+~~disabled~~ | **In future** - Disable the input and prevent it interactions.               | Boolean                   | false     | No
+placeholder  | The textarea placeholder. Similar to HTML5 placeholder attribute.            | String                    | ''        | No
+error        | The status changes text field border, label and assist text color to red.    | Boolean                   | false     | No
+correct      | The status changes text field border and label color to red.                 | Boolean                   | false     | No
+assist       | The assist message below text field.                                         | String                    | ''        | No
 
 #### Classes
 
 Name      | Features            | Related to state  | Description      
-----------|---------------------|-------------------|--------------
-m-input   |                     |                   | some
-a-field   | f-textarea f-filled | f-error f-correct | some
-a-label   | f-field             | f-error f-correct | some
-a-assist  |                     | f-error           | some
-a-icon    | f-input             | f-error f-correct | some
+----------|---------------------|-------------------|:------------:
+m-input   |                     |                   | - 
+a-field   | f-textarea f-filled | f-error f-correct | - 
+a-label   | f-field             | f-error f-correct | - 
+a-assist  |                     | f-error           | - 
+a-icon    | f-input             | f-error f-correct | - 
 
 #### Events
 
 Name     | Description      
----------|-------------
+---------|-------------------------
 input    | Contains selector value
