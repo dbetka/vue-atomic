@@ -1,5 +1,5 @@
 /*!
- * @dbetka/vue-atomic v0.0.1
+ * @dbetka/vue-atomic v0.0.4
  * (c) dbetka
  * Released under the MIT License.
  */
@@ -960,6 +960,7 @@ var __vue_component__$3 = normalizeComponent({
   staticRenderFns: __vue_staticRenderFns__$2
 }, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$3, false, undefined, undefined, undefined);
 
+// import './styles'
 var components = {
   MInput: __vue_component__,
   MSelect: __vue_component__$1,

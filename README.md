@@ -12,7 +12,7 @@ npm i -D @dbetka/vue-atomic
 #### Full Bundle
 ```js
 import VueAtomic from '@dbetka/vue-atomic'
-import '@dbetka/vue-atomic/dist/style.sass'
+import '@dbetka/vue-atomic/dist/index.sass'
 
 Vue.use(VueAtomic)
 ```
@@ -21,14 +21,14 @@ Vue.use(VueAtomic)
 with default name
 ```js
 import { MInput } from '@dbetka/vue-atomic'
-import '@dbetka/vue-atomic/dist/style.sass'
+import '@dbetka/vue-atomic/dist/index.sass'
 
 Vue.component(MInput.name, MInput) // component name is m-input
 ```
 with own name
 ```js
 import { MInput } from '@dbetka/vue-atomic'
-import '@dbetka/vue-atomic/dist/style.sass'
+import '@dbetka/vue-atomic/dist/index.sass'
 
 Vue.component('new-input', MInput) // component name is new-input
 ```
@@ -199,3 +199,35 @@ a-icon    | f-input             | f-error f-correct | -
 Name     | Description      
 ---------|-------------------------
 input    | Contains selector value
+
+
+
+## Customization
+
+### Base example for MInput widget
+
+```vue
+<template>
+  <div>
+    <m-input 
+      v-model="initial" 
+      class="f-better-font-color"
+    />
+  </div>
+</template>
+
+<script>
+  export default {
+    name: 'o-form',
+    data: () => ({
+      initial: 'Initial Value',
+    })
+  }
+</script>
+```
+
+```css
+.m-input.f-better-font {
+    color: blue;
+}
+```
