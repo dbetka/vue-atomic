@@ -1,6 +1,6 @@
 {
   "name": "@dbetka/vue-atomic",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Atomic Design widgets for Vue.js",
   "license": "MIT",
   "main": "./dist/index.js",
@@ -9,7 +9,7 @@
     "build-plugin": "npx bili --bundle-node-modules",
     "build-full-css": "node scripts/bundle-full-css.js --input src/index.sass --output dist",
     "build-wigets-css": "node scripts/bundle-wigets-css.js --input src/styles/components --output dist --base-file src/base-file.sass",
-    "build": "npm run build-plugin & npm run build-full-css & npm run build-wigets-css"
+    "build": "npm run build-full-css & npm run build-wigets-css & npm run build-plugin"
   },
   "files": [
     "dist"
