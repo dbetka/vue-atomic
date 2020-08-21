@@ -1,5 +1,5 @@
 /*!
- * @dbetka/vue-atomic v0.0.5
+ * @dbetka/vue-atomic v0.0.6
  * (c) dbetka
  * Released under the MIT License.
  */

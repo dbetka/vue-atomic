@@ -1,6 +1,6 @@
 {
   "name": "@dbetka/vue-atomic",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Atomic Design widgets for Vue.js",
   "license": "MIT",
   "main": "./dist/index.js",
