@@ -19,5 +19,6 @@ function recursiveMake (dirTree) {
 }
 
 module.exports = {
+  make,
   recursiveMake,
 };

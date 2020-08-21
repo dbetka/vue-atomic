@@ -1,13 +1,18 @@
-const fs = require('fs');
-const { importGlob } = require('./tools/importGlob')
+const dir = require('./tools/dir');
 const file = require('./tools/file');
-const { input, output } = require('./tools/vars.js');
+const { input, output } = require('./tools/vars');
+
+function getFileName (path) {
+  return path.replace(/^[\w\/.]*\//, '').replace(/\.[\w]*$/, '')
+}
 
 
 function convertWithGlobImport () {
   const content = file.read(input)
   const cssContent = file.convertSASSToCSS(content)
-  file.make(output + '/index.css', cssContent)
+  const fileName = getFileName(input) + '.css'
+  dir.make(output)
+  file.make(output + '/' + fileName, cssContent)
 }
 
 convertWithGlobImport()
