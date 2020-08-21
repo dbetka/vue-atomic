@@ -9,6 +9,7 @@ const TYPES = {
 
 const baseDir = 'src/styles/components';
 const destinationDir = 'dist2';
+const baseFilePath = 'src/styles/base-file.sass'
 
 function makeDir (dir) {
   if (!fs.existsSync(dir)) {
@@ -54,13 +55,16 @@ function recursiveMakeFile (dirTree) {
 }
 
 function convertSASSToCSS (dirFile) {
+  const baseFile = fs.readFileSync(baseFilePath, "utf8")
+  const fileToConvert = fs.readFileSync(dirFile.path, "utf8")
   return sass.renderSync({
-    file: dirFile.path,
-  });
+    data: baseFile + '\n' + fileToConvert,
+    paths: ['./src/styles/'],
+    indentedSyntax: true,
+  }).css.toString();
 }
 
 const stylesTree = dirTree(baseDir, { extensions: /\.sass/ });
 
 recursiveMakeDir(stylesTree);
-
 recursiveMakeFile(stylesTree);
