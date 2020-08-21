@@ -1,15 +1,18 @@
 const dirTree = require('directory-tree');
 const fs = require('fs');
 const sass = require('node-sass');
+const { argv } = require('yargs');
+
+// console.log(argv);
 
 const TYPES = {
   directory: 'directory',
   file: 'file',
 };
 
-const baseDir = 'src/styles/components';
-const destinationDir = 'dist2';
-const baseFilePath = 'src/styles/base-file.sass'
+const baseDir = argv.input;
+const destinationDir = argv.output;
+const baseFilePath = argv.baseFile
 
 function makeDir (dir) {
   if (!fs.existsSync(dir)) {
@@ -34,8 +37,6 @@ function makeFile (path, value) {
   fs.writeFile(path, value, error => {
     if(error){
       console.error(error)
-    } else {
-      console.log('file has been written on disk')
     }
   });
 }
@@ -68,3 +69,4 @@ const stylesTree = dirTree(baseDir, { extensions: /\.sass/ });
 
 recursiveMakeDir(stylesTree);
 recursiveMakeFile(stylesTree);
+

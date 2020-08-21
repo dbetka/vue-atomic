@@ -12,7 +12,7 @@ npm i -D @dbetka/vue-atomic
 #### Full Bundle
 ```js
 import VueAtomic from '@dbetka/vue-atomic'
-import '@dbetka/vue-atomic/dist/index.sass'
+import '@dbetka/vue-atomic/dist/index.css'
 
 Vue.use(VueAtomic)
 ```
@@ -21,14 +21,14 @@ Vue.use(VueAtomic)
 with default name
 ```js
 import { MInput } from '@dbetka/vue-atomic'
-import '@dbetka/vue-atomic/dist/index.sass'
+import '@dbetka/vue-atomic/dist/molecules/input.css'
 
 Vue.component(MInput.name, MInput) // component name is m-input
 ```
 with own name
 ```js
 import { MInput } from '@dbetka/vue-atomic'
-import '@dbetka/vue-atomic/dist/index.sass'
+import '@dbetka/vue-atomic/dist/molecules/input.css'
 
 Vue.component('new-input', MInput) // component name is new-input
 ```
