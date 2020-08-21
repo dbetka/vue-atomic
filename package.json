@@ -6,7 +6,9 @@
   "main": "./dist/index.js",
   "scripts": {
     "dev": "",
-    "build": "npx bili --bundle-node-modules"
+    "build-full": "npx bili --bundle-node-modules",
+    "build-seperately": "node scripts/bundle-style.js ./src/styles/ --base ./src/styles --dir ./dist2/",
+    "build": "npm run build-full & npm run build-seperately"
   },
   "files": [
     "dist"
@@ -21,8 +23,10 @@
   },
   "homepage": "https://github.com/dbetka/vue-atomic#readme",
   "devDependencies": {
+    "autoprefixer": "^9.8.6",
     "babel-eslint": "^10.1.0",
     "bili": "^4.9.0",
+    "directory-tree": "^2.2.4",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.20.2",
@@ -31,10 +35,11 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.2.2",
     "node-sass": "^4.14.1",
-    "rollup-plugin-vue": "^5.1.6",
-    "rollup-plugin-postcss": "^3.1.5",
+    "postcss-cli": "^7.1.1",
     "postcss-nested": "^4.2.3",
-    "autoprefixer": "^9.8.6",
+    "postcss-sass": "^0.4.4",
+    "rollup-plugin-postcss": "^3.1.5",
+    "rollup-plugin-vue": "^5.1.6",
     "vue-material-design-icons": "^4.6.0",
     "vue-template-compiler": "^2.6.11"
   }
