@@ -199,3 +199,35 @@ a-icon    | f-input             | f-error f-correct | -
 Name     | Description      
 ---------|-------------------------
 input    | Contains selector value
+
+
+
+## Customization
+
+### Base example for MInput widget
+
+```vue
+<template>
+  <div>
+    <m-input 
+      v-model="initial" 
+      class="f-better-font-color"
+    />
+  </div>
+</template>
+
+<script>
+  export default {
+    name: 'o-form',
+    data: () => ({
+      initial: 'Initial Value',
+    })
+  }
+</script>
+```
+
+```css
+.m-input.f-better-font {
+    color: blue;
+}
+```
