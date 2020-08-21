@@ -6,10 +6,10 @@
   "main": "./dist/index.js",
   "scripts": {
     "dev": "",
-    "build-full": "npx bili --bundle-node-modules",
-    "build-index": "node scripts/bundle-style-full.js --input src/index.sass --output dist",
-    "build-seperately": "node scripts/bundle-style.js --input src/styles/components --output dist --base-file src/base-file.sass",
-    "build": "npm run build-full & npm run build-seperately"
+    "build-plugin": "npx bili --bundle-node-modules",
+    "build-full-css": "node scripts/bundle-full-css.js --input src/index.sass --output dist",
+    "build-wigets-css": "node scripts/bundle-wigets-css.js --input src/styles/components --output dist --base-file src/base-file.sass",
+    "build": "npm run build-plugin & npm run build-full-css & npm run build-wigets-css"
   },
   "files": [
     "dist"
