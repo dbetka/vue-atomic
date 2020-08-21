@@ -471,21 +471,6 @@
 .f-text-underline {
   text-decoration: underline; }
 
-.f-min-100 {
-  min-width: 100%; }
-
-.f-100 {
-  width: 100% !important; }
-
-.f-40 {
-  width: 40% !important; }
-
-.f-90 {
-  width: 90% !important; }
-
-.f-w-auto {
-  width: auto !important; }
-
 .f-text-center, .a-button {
   text-align: center; }
 
@@ -554,6 +539,21 @@
 
 .f-text-12, .a-label.f-button-icon-footer, .a-assist {
   font-size: 12px; }
+
+.f-min-100 {
+  min-width: 100%; }
+
+.f-100 {
+  width: 100% !important; }
+
+.f-40 {
+  width: 40% !important; }
+
+.f-90 {
+  width: 90% !important; }
+
+.f-w-auto {
+  width: auto !important; }
 
 .a-assist.f-error {
   color: #ee1c25; }

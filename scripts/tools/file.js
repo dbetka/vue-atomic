@@ -1,5 +1,6 @@
 const fs = require('fs');
 const sass = require('node-sass');
+const { importGlob } = require('./importGlob')
 const { TYPES, input, output, baseFile } = require('./vars.js');
 
 function readFile (path) {
@@ -15,6 +16,7 @@ function makeFile (path, value) {
 }
 
 function convertSASSToCSS (data) {
+  data = importGlob(data)
   return sass.renderSync({
     data,
     indentedSyntax: true,
@@ -22,10 +24,10 @@ function convertSASSToCSS (data) {
 }
 
 function mergeBaseFileAndConvertSASSToCSS (dirFile) {
-  const baseFile = readFile(baseFile);
+  const baseFileContent = readFile(baseFile);
   const fileToConvert = readFile(dirFile.path);
 
-  return convertSASSToCSS(baseFile + '\n' + fileToConvert);
+  return convertSASSToCSS(baseFileContent + '\n' + fileToConvert);
 }
 
 function recursiveConvertAndMake (dirTree) {

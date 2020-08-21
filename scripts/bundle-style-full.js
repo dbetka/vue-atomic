@@ -6,8 +6,7 @@ const { input, output } = require('./tools/vars.js');
 
 function convertWithGlobImport () {
   const content = file.read(input)
-  const contentPrepareToConvert = importGlob(content)
-  const cssContent = file.convertSASSToCSS(contentPrepareToConvert)
+  const cssContent = file.convertSASSToCSS(content)
   file.make(output + '/index.css', cssContent)
 }
 
