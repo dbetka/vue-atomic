@@ -199,3 +199,7 @@ a-icon    | f-input             | f-error f-correct | -
 Name     | Description      
 ---------|-------------------------
 input    | Contains selector value
+
+## Project maintenance 
+
+Scripts used in `package.json` has own docs [here](scripts/README.md)
