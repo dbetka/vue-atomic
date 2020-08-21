@@ -7,9 +7,11 @@
   "scripts": {
     "dev": "",
     "build-plugin": "npx bili --bundle-node-modules",
-    "build-full-css": "node scripts/bundle-full-css.js --input src/index.sass --output dist",
-    "build-wigets-css": "node scripts/bundle-wigets-css.js --input src/styles/components --output dist --base-file src/base-file.sass",
-    "build": "npm run build-full-css & npm run build-wigets-css & npm run build-plugin"
+    "build-full-css": "node scripts/bundle-css-assembly.js -i src/index.sass -o dist",
+    "build-wigets-css": "node scripts/bundle-css-seperately.js -i src/styles/components -o dist -b src/base-file.sass",
+    "build-themes-css": "node scripts/bundle-css-seperately.js -i src/styles/themes -o dist/themes",
+    "build-css": "npm run build-full-css & npm run build-wigets-css & npm run build-themes-css",
+    "build": "npm run build-css & npm run build-plugin"
   },
   "files": [
     "dist"

@@ -9,9 +9,7 @@ function make (dir) {
 
 function recursiveMake (dirTree) {
   if (dirTree.type === TYPES.directory) {
-    if (dirTree.path !== input) {
-      make(dirTree.path.replace(input, output));
-    }
+    make(dirTree.path.replace(input, output));
     if (dirTree.children.length > 0) {
       for (const childrenDir of dirTree.children) {
         recursiveMake(childrenDir);

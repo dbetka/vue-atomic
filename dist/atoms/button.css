@@ -484,22 +484,22 @@
   text-align: justify; }
 
 .f-text-info {
-  color: #0E9FED; }
+  color: var(--color-info); }
 
 .f-text-warning {
-  color: #F1AB68; }
+  color: var(--color-warn); }
 
 .f-text-danger {
-  color: #ee1c25; }
+  color: var(--color-error); }
 
 .f-text-white {
-  color: #ffffff; }
+  color: var(--color-text-contrast); }
 
 .f-text-gray {
-  color: #888888; }
+  color: var(--color-subtext); }
 
 .f-text-standard {
-  color: #4c4c4c; }
+  color: var(--color-text); }
 
 .f-line-18 {
   line-height: 18px; }
@@ -558,7 +558,7 @@
 .a-button {
   min-width: 184px;
   height: 36px;
-  border: 1px solid #429F3C;
+  border: 1px solid var(--color-primary);
     border-radius: 20px;
   font-weight: 500;
   line-height: 16px;
@@ -570,8 +570,8 @@
   align-self: center;
   outline: none; }
   .a-button:hover {
-    background: #337a2e; }
+    background: var(--color-primary-hover); }
   .a-button:disabled {
     opacity: 0.38;
-    background: rgba(136, 136, 136, 0.65);
-    color: #4c4c4c; }
+    background: var(--color-disabled);
+    color: var(--color-text); }

@@ -7,8 +7,8 @@
   transition-property: all
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1)
   transition-duration: 200ms
-  background-color: $color-background
-  color: $color-subtext
+  background-color: var(--color-background)
+  color: var(--color-subtext)
 
 .a-field
   &:focus, &:focus-within, &.f-filled
@@ -20,8 +20,8 @@
 
   &:focus, &:focus-within
     ~ .a-label.f-field
-      color: $color-primary
+      color: var(--color-primary)
 
   &:disabled
     ~ .a-label.f-field
-      color: $color-disabled
+      color: var(--color-disabled)

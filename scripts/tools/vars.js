@@ -5,9 +5,9 @@ const TYPES = {
   file: 'file',
 };
 
-const input = argv.input;
-const output = argv.output;
-const baseFile = argv.baseFile;
+const input = argv.input || argv.i;
+const output = argv.output || argv.o;
+const baseFile = argv.baseFile || argv.b;
 
 module.exports = {
   TYPES,

@@ -4,7 +4,7 @@ const { importGlob } = require('./importGlob')
 const { TYPES, input, output, baseFile } = require('./vars.js');
 
 function readFile (path) {
-  return fs.readFileSync(path, 'utf8');
+  return path ? fs.readFileSync(path, 'utf8') : undefined;
 }
 
 function makeFile (path, value) {
@@ -24,7 +24,7 @@ function convertSASSToCSS (data) {
 }
 
 function mergeBaseFileAndConvertSASSToCSS (dirFile) {
-  const baseFileContent = readFile(baseFile);
+  const baseFileContent = readFile(baseFile) || '';
   const fileToConvert = readFile(dirFile.path);
 
   return convertSASSToCSS(baseFileContent + '\n' + fileToConvert);

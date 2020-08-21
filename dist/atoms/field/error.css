@@ -484,22 +484,22 @@
   text-align: justify; }
 
 .f-text-info {
-  color: #0E9FED; }
+  color: var(--color-info); }
 
 .f-text-warning {
-  color: #F1AB68; }
+  color: var(--color-warn); }
 
 .f-text-danger {
-  color: #ee1c25; }
+  color: var(--color-error); }
 
 .f-text-white {
-  color: #ffffff; }
+  color: var(--color-text-contrast); }
 
 .f-text-gray {
-  color: #888888; }
+  color: var(--color-subtext); }
 
 .f-text-standard {
-  color: #4c4c4c; }
+  color: var(--color-text); }
 
 .f-line-18 {
   line-height: 18px; }
@@ -560,4 +560,4 @@
     padding-top: 15px;
     padding-bottom: 13px;
   border-width: 2px;
-  border-color: #ee1c25; }
+  border-color: var(--color-error); }
