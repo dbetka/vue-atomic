@@ -555,7 +555,7 @@
 .f-w-auto {
   width: auto !important; }
 
-.a-field {
+.a-input {
   font-size: 16px;
   height: 56px;
   line-height: 24px;
@@ -571,16 +571,16 @@
   transition-property: all;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
   transition-duration: 200ms; }
-  .a-field:disabled {
+  .a-input:disabled {
     border-color: gray; }
-  .a-field:focus, .a-field:focus-within, .a-field.f-correct, .a-field.f-error {
+  .a-input:focus, .a-input:focus-within, .a-input.f-correct, .a-input.f-error {
     padding: 14px;
       padding-top: 15px;
       padding-bottom: 13px;
     border-width: 2px; }
-  .a-field:focus, .a-field:focus-within {
+  .a-input:focus, .a-input:focus-within {
     border-color: darkgreen; }
-  .a-field.f-error, .a-field.f-correct {
+  .a-input.f-error, .a-input.f-correct {
     padding-right: 52px; }
-  .a-field.f-correct {
+  .a-input.f-correct {
     border-color: green; }

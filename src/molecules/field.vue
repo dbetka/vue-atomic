@@ -1,23 +1,17 @@
 <template>
-  <div class="m-input">
-    <input
-      :id="id"
-      class="a-field"
-      :class="additionalClasses"
-      :type="getType"
-      :disabled="disabled"
-      v-model="vModel"
-    />
-    <label
-      class="a-label f-field"
-      :class="{ 'f-correct': correct, 'f-error': error }"
-      :for="id"
-    >
-      {{ placeholder }}
-    </label>
+  <div class="m-field">
+    <slot/>
+<!--    <label-->
+<!--      class="a-label f-field"-->
+<!--      :class="{ 'f-correct': correct, 'f-error': error }"-->
+<!--      :for="id"-->
+<!--    >-->
+<!--      {{ placeholder }}-->
+<!--    </label>-->
     <icon-eye
       v-if="isPassword && showPassword === false"
       class="a-icon f-input"
+
       :size="26"
       @click="showPassword = true"
     />
@@ -47,15 +41,13 @@
 </template>
 
 <script>
-import { mixins } from '../mixins/base';
 import IconEye from 'vue-material-design-icons/Eye';
 import IconEyeOff from 'vue-material-design-icons/EyeOff';
 import IconAlert from 'vue-material-design-icons/Alert';
 import IconCheckBold from 'vue-material-design-icons/CheckBold';
 
 export default {
-  name: 'm-input',
-  mixins: [mixins.vModel],
+  name: 'm-field',
   components: {
     IconEye,
     IconEyeOff,
@@ -89,23 +81,33 @@ export default {
     },
   },
   data: () => ({
+    MField: {
+      value: null,
+      showPassword: false,
+      typePassword: false,
+      focused: false,
+      disabled: false,
+      correct: false,
+      error: true
+    },
     id: '',
     showPassword: false,
   }),
-  mounted () {
-    const randomNumber = Math.floor(Math.random() * 10000);
-    this.id = 'id-input-' + randomNumber;
+  provide () {
+    return {
+      MField: this.MField
+    }
   },
   computed: {
     isPassword () {
-      return this.type === 'password';
+      return this.MField.typePassword === true;
     },
     additionalClasses () {
       return {
         'f-filled': this.vModel !== '',
         'f-error': this.error,
         'f-correct': this.correct,
-        'f-icon': this.error || this.isPassword,
+        'f-icon': this.error || this.typePassword,
       };
     },
     getType () {
@@ -116,5 +118,8 @@ export default {
       }
     },
   },
+  mounted() {
+    console.log(this);
+  }
 };
 </script>

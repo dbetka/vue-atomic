@@ -678,7 +678,7 @@
     border: solid 1px transparent;
     cursor: not-allowed; }
 
-.a-field {
+.a-input {
   font-size: 16px;
   height: 56px;
   line-height: 24px;
@@ -694,18 +694,18 @@
   transition-property: all;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
   transition-duration: 200ms; }
-  .a-field:disabled {
+  .a-input:disabled {
     border-color: gray; }
-  .a-field:focus, .a-field:focus-within, .a-field.f-correct, .a-field.f-error {
+  .a-input:focus, .a-input:focus-within, .a-input.f-correct, .a-input.f-error {
     padding: 14px;
       padding-top: 15px;
       padding-bottom: 13px;
     border-width: 2px; }
-  .a-field:focus, .a-field:focus-within {
+  .a-input:focus, .a-input:focus-within {
     border-color: darkgreen; }
-  .a-field.f-error, .a-field.f-correct {
+  .a-input.f-error, .a-input.f-correct {
     padding-right: 52px; }
-  .a-field.f-correct {
+  .a-input.f-correct {
     border-color: green; }
 
 .a-field.f-error {
@@ -794,18 +794,15 @@
   transition-duration: 200ms;
   background-color: var(--color-background);
   color: var(--color-subtext); }
-
-.a-field:focus ~ .a-label.f-field, .a-field:focus-within ~ .a-label.f-field, .a-field.f-filled ~ .a-label.f-field {
-  top: -7px;
-  left: 13px;
-  font-size: 12px;
-  line-height: 16px; }
-
-.a-field:focus ~ .a-label.f-field, .a-field:focus-within ~ .a-label.f-field {
-  color: var(--color-primary); }
-
-.a-field:disabled ~ .a-label.f-field {
-  color: var(--color-disabled); }
+  .a-label.f-field.f-reduced {
+    top: -7px;
+    left: 13px;
+    font-size: 12px;
+    line-height: 16px; }
+  .a-label.f-field.f-focused {
+    color: var(--color-primary); }
+  .a-label.f-field.f-disabled {
+    color: var(--color-disabled); }
 
 .a-field:focus ~ .a-label.f-field.f-correct {
   color: var(--color-primary); }
@@ -860,6 +857,14 @@
   overflow: hidden;
   white-space: normal; }
 
+.m-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+    margin-bottom: 8px; }
+
 .m-grid {
   display: grid; }
 
@@ -868,14 +873,6 @@
 
 .m-grid.f-split-3 {
   grid-template-columns: repeat(3, 33.33333%); }
-
-.m-input {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  margin: 0;
-    margin-bottom: 8px; }
 
 .m-options {
   position: absolute;

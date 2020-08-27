@@ -10,18 +10,14 @@
   background-color: var(--color-background)
   color: var(--color-subtext)
 
-.a-field
-  &:focus, &:focus-within, &.f-filled
-    ~ .a-label.f-field
-      top: -7px
-      left: 13px
-      font-size: 12px
-      line-height: 16px
+  &.f-reduced
+    top: -7px
+    left: 13px
+    font-size: 12px
+    line-height: 16px
 
-  &:focus, &:focus-within
-    ~ .a-label.f-field
-      color: var(--color-primary)
+  &.f-focused
+    color: var(--color-primary)
 
-  &:disabled
-    ~ .a-label.f-field
-      color: var(--color-disabled)
+  &.f-disabled
+    color: var(--color-disabled)

@@ -1,5 +1,5 @@
 <template>
-  <div class="m-input">
+  <div class="m-field">
     <m-resize-auto>
       <template v-slot:default="{resize}">
         <textarea

@@ -566,15 +566,12 @@
   transition-duration: 200ms;
   background-color: var(--color-background);
   color: var(--color-subtext); }
-
-.a-field:focus ~ .a-label.f-field, .a-field:focus-within ~ .a-label.f-field, .a-field.f-filled ~ .a-label.f-field {
-  top: -7px;
-  left: 13px;
-  font-size: 12px;
-  line-height: 16px; }
-
-.a-field:focus ~ .a-label.f-field, .a-field:focus-within ~ .a-label.f-field {
-  color: var(--color-primary); }
-
-.a-field:disabled ~ .a-label.f-field {
-  color: var(--color-disabled); }
+  .a-label.f-field.f-reduced {
+    top: -7px;
+    left: 13px;
+    font-size: 12px;
+    line-height: 16px; }
+  .a-label.f-field.f-focused {
+    color: var(--color-primary); }
+  .a-label.f-field.f-disabled {
+    color: var(--color-disabled); }

@@ -137,55 +137,196 @@ var mixins = {
   validation: validationMixin
 };
 
-//
-var script = {
-  name: 'm-input',
-  mixins: [mixins.vModel],
-  components: {
-    IconEye: IconEye,
-    IconEyeOff: IconEyeOff,
-    IconAlert: IconAlert,
-    IconCheckBold: IconCheckBold
-  },
+var MFieldMixin = {
   props: {
-    disabled: {
-      type: Boolean,
-      "default": false
-    },
-    placeholder: {
-      type: String,
-      "default": ''
-    },
-    type: {
-      type: String,
-      "default": ''
-    },
-    error: {
-      type: Boolean,
-      "default": false
-    },
-    correct: {
-      type: Boolean,
-      "default": false
-    },
-    assist: {
-      type: String,
-      "default": ''
-    }
+    value: {},
+    placeholder: String,
+    name: String,
+    maxlength: [String, Number],
+    readonly: Boolean,
+    required: Boolean,
+    disabled: Boolean,
+    mdCounter: [String, Number]
   },
   data: function data() {
     return {
-      id: '',
-      showPassword: false
+      localValue: this.value,
+      textareaHeight: false
     };
   },
+  computed: {
+    model: {
+      get: function get() {
+        return this.localValue;
+      },
+      set: function set(value) {
+        var _this = this;
+
+        if (value.constructor.toString().match(/function (\w*)/)[1].toLowerCase() !== 'inputevent') {
+          this.$nextTick(function () {
+            _this.localValue = value;
+            _this.MField.hasInvalidValue = _this.isInvalidValue();
+          });
+        }
+      }
+    },
+    clear: function clear() {
+      return this.MField.clear;
+    },
+    attributes: function attributes() {
+      return Object.assign(Object.assign({}, this.$attrs), {}, {
+        type: this.type,
+        id: this.id,
+        name: this.name,
+        disabled: this.disabled,
+        required: this.required,
+        placeholder: this.placeholder,
+        readonly: this.readonly,
+        maxlength: this.maxlength
+      });
+    }
+  },
+  watch: {
+    model: function model() {
+      this.setFieldValue();
+    },
+    clear: function clear(_clear) {
+      if (_clear) {
+        this.clearField();
+      }
+    },
+    placeholder: function placeholder() {
+      this.setPlaceholder();
+    },
+    disabled: function disabled() {
+      this.setDisabled();
+    },
+    required: function required() {
+      this.setRequired();
+    },
+    maxlength: function maxlength() {
+      this.setMaxlength();
+    },
+    mdCounter: function mdCounter() {
+      this.setMaxlength();
+    },
+    localValue: function localValue(val) {
+      this.$emit('input', val);
+    },
+    value: function value(val) {
+      this.localValue = val;
+    }
+  },
+  methods: {
+    clearField: function clearField() {
+      this.$el.value = '';
+      this.model = '';
+      this.setFieldValue();
+    },
+    setLabelFor: function setLabelFor() {
+      if (this.$el.parentNode) {
+        var label = this.$el.parentNode.querySelector('label');
+
+        if (label) {
+          var forAttribute = label.getAttribute('for');
+
+          if (!forAttribute || forAttribute.indexOf('md-') >= 0) {
+            label.setAttribute('for', this.id);
+          }
+        }
+      }
+    },
+    setFormResetListener: function setFormResetListener() {
+      if (!this.$el.form) {
+        return;
+      }
+
+      var parentForm = this.$el.form;
+      parentForm.addEventListener('reset', this.onParentFormReset);
+    },
+    removeFormResetListener: function removeFormResetListener() {
+      if (!this.$el.form) {
+        return;
+      }
+
+      var parentForm = this.$el.form;
+      parentForm.removeEventListener('reset', this.onParentFormReset);
+    },
+    onParentFormReset: function onParentFormReset() {
+      this.clearField();
+    },
+    isInvalidValue: function isInvalidValue() {
+      return this.$el.validity.badInput;
+    },
+    setFieldValue: function setFieldValue() {
+      this.MField.value = this.model;
+    },
+    setPlaceholder: function setPlaceholder() {
+      this.MField.placeholder = Boolean(this.placeholder);
+    },
+    setDisabled: function setDisabled() {
+      this.MField.disabled = Boolean(this.disabled);
+    },
+    setRequired: function setRequired() {
+      this.MField.required = Boolean(this.required);
+    },
+    setMaxlength: function setMaxlength() {
+      if (this.mdCounter) {
+        this.MField.counter = parseInt(this.mdCounter, 10);
+      } else {
+        this.MField.maxlength = parseInt(this.maxlength, 10);
+      }
+    },
+    onFocus: function onFocus() {
+      this.MField.focused = true;
+    },
+    onBlur: function onBlur() {
+      this.MField.focused = false;
+    }
+  },
+  created: function created() {
+    this.setFieldValue(); // this.setPlaceholder()
+    // this.setDisabled()
+    // this.setRequired()
+    // this.setMaxlength()
+  },
   mounted: function mounted() {
-    var randomNumber = Math.floor(Math.random() * 10000);
-    this.id = 'id-input-' + randomNumber;
+    this.setLabelFor();
+    this.setFormResetListener();
+  },
+  beforeDestroy: function beforeDestroy() {
+    this.removeFormResetListener();
+  }
+};
+
+//
+var script = {
+  name: 'a-input',
+  mixins: [MFieldMixin, mixins.vModel],
+  inject: ['MField'],
+  props: {
+    id: {
+      type: String,
+      "default": function _default() {
+        return 'a-input-' + Math.random().toString(36).slice(4);
+      }
+    },
+    type: {
+      type: String,
+      "default": 'text'
+    }
   },
   computed: {
+    toggleType: function toggleType() {
+      return this.MField.typePassword;
+    },
     isPassword: function isPassword() {
       return this.type === 'password';
+    },
+    listeners: function listeners() {
+      var l = Object.assign({}, this.$listeners);
+      delete l.input;
+      return l;
     },
     additionalClasses: function additionalClasses() {
       return {
@@ -194,14 +335,39 @@ var script = {
         'f-correct': this.correct,
         'f-icon': this.error || this.isPassword
       };
+    }
+  },
+  watch: {
+    type: function type(_type) {
+      this.setPassword(this.isPassword);
     },
-    getType: function getType() {
-      if (this.isPassword) {
-        return this.showPassword ? '' : this.type;
+    toggleType: function toggleType(toggle) {
+      if (toggle) {
+        this.setTypeText();
       } else {
-        return this.type;
+        this.setTypePassword();
       }
     }
+  },
+  methods: {
+    setPassword: function setPassword(state) {
+      this.MField.typePassword = state;
+      this.MField.showPassword = false;
+    },
+    setTypePassword: function setTypePassword() {
+      this.$el.type = 'password';
+    },
+    setTypeText: function setTypeText() {
+      this.$el.type = 'text';
+    }
+  },
+  created: function created() {
+    this.setPassword(this.isPassword);
+    this.$attrs.slot = 'input';
+    console.log(this.$attrs);
+  },
+  beforeDestroy: function beforeDestroy() {
+    this.setPassword(false);
   }
 };
 
@@ -291,85 +457,24 @@ var __vue_render__ = function __vue_render__() {
 
   var _c = _vm._self._c || _h;
 
-  return _c('div', {
-    staticClass: "m-input"
-  }, [_vm.getType === 'checkbox' ? _c('input', {
+  return _c('input', _vm._g({
     directives: [{
       name: "model",
       rawName: "v-model",
       value: _vm.vModel,
       expression: "vModel"
     }],
-    staticClass: "a-field",
+    staticClass: "a-input",
     "class": _vm.additionalClasses,
     attrs: {
-      "id": _vm.id,
-      "disabled": _vm.disabled,
-      "type": "checkbox"
-    },
-    domProps: {
-      "checked": Array.isArray(_vm.vModel) ? _vm._i(_vm.vModel, null) > -1 : _vm.vModel
-    },
-    on: {
-      "change": function change($event) {
-        var $$a = _vm.vModel,
-            $$el = $event.target,
-            $$c = $$el.checked ? true : false;
-
-        if (Array.isArray($$a)) {
-          var $$v = null,
-              $$i = _vm._i($$a, $$v);
-
-          if ($$el.checked) {
-            $$i < 0 && (_vm.vModel = $$a.concat([$$v]));
-          } else {
-            $$i > -1 && (_vm.vModel = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
-          }
-        } else {
-          _vm.vModel = $$c;
-        }
-      }
-    }
-  }) : _vm.getType === 'radio' ? _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.vModel,
-      expression: "vModel"
-    }],
-    staticClass: "a-field",
-    "class": _vm.additionalClasses,
-    attrs: {
-      "id": _vm.id,
-      "disabled": _vm.disabled,
-      "type": "radio"
-    },
-    domProps: {
-      "checked": _vm._q(_vm.vModel, null)
-    },
-    on: {
-      "change": function change($event) {
-        _vm.vModel = null;
-      }
-    }
-  }) : _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.vModel,
-      expression: "vModel"
-    }],
-    staticClass: "a-field",
-    "class": _vm.additionalClasses,
-    attrs: {
-      "id": _vm.id,
-      "disabled": _vm.disabled,
-      "type": _vm.getType
+      "id": _vm.id
     },
     domProps: {
       "value": _vm.vModel
     },
     on: {
+      "focus": _vm.onFocus,
+      "blur": _vm.onBlur,
       "input": function input($event) {
         if ($event.target.composing) {
           return;
@@ -378,16 +483,200 @@ var __vue_render__ = function __vue_render__() {
         _vm.vModel = $event.target.value;
       }
     }
-  }), _vm._v(" "), _c('label', {
-    staticClass: "a-label f-field",
-    "class": {
-      'f-correct': _vm.correct,
-      'f-error': _vm.error
+  }, _vm.listeners));
+};
+
+var __vue_staticRenderFns__ = [];
+/* style */
+
+var __vue_inject_styles__ = undefined;
+/* scoped */
+
+var __vue_scope_id__ = undefined;
+/* module identifier */
+
+var __vue_module_identifier__ = undefined;
+/* functional template */
+
+var __vue_is_functional_template__ = false;
+/* style inject */
+
+/* style inject SSR */
+
+/* style inject shadow dom */
+
+var __vue_component__ = normalizeComponent({
+  render: __vue_render__,
+  staticRenderFns: __vue_staticRenderFns__
+}, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, false, undefined, undefined, undefined);
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var script$1 = {
+  name: 'a-label',
+  inject: ['MField'],
+  computed: {
+    hasValue: function hasValue() {
+      return this.MField.value;
     },
-    attrs: {
-      "for": _vm.id
+    isFocused: function isFocused() {
+      return this.MField.focused;
+    },
+    isDisabled: function isDisabled() {
+      return this.MField.disabled;
+    },
+    classes: function classes() {
+      return {
+        'f-reduced': this.hasValue || this.isFocused,
+        'f-focused': this.isFocused,
+        'f-disabled': this.isDisabled
+      };
     }
-  }, [_vm._v("\n    " + _vm._s(_vm.placeholder) + "\n  ")]), _vm._v(" "), _vm.isPassword && _vm.showPassword === false ? _c('icon-eye', {
+  }
+};
+
+/* script */
+var __vue_script__$1 = script$1;
+/* template */
+
+var __vue_render__$1 = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c('label', {
+    staticClass: "a-label f-field",
+    "class": _vm.classes
+  }, [_vm._t("default")], 2);
+};
+
+var __vue_staticRenderFns__$1 = [];
+/* style */
+
+var __vue_inject_styles__$1 = undefined;
+/* scoped */
+
+var __vue_scope_id__$1 = undefined;
+/* module identifier */
+
+var __vue_module_identifier__$1 = undefined;
+/* functional template */
+
+var __vue_is_functional_template__$1 = false;
+/* style inject */
+
+/* style inject SSR */
+
+/* style inject shadow dom */
+
+var __vue_component__$1 = normalizeComponent({
+  render: __vue_render__$1,
+  staticRenderFns: __vue_staticRenderFns__$1
+}, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, false, undefined, undefined, undefined);
+
+//
+var script$2 = {
+  name: 'm-field',
+  components: {
+    IconEye: IconEye,
+    IconEyeOff: IconEyeOff,
+    IconAlert: IconAlert,
+    IconCheckBold: IconCheckBold
+  },
+  props: {
+    disabled: {
+      type: Boolean,
+      "default": false
+    },
+    placeholder: {
+      type: String,
+      "default": ''
+    },
+    type: {
+      type: String,
+      "default": ''
+    },
+    error: {
+      type: Boolean,
+      "default": false
+    },
+    correct: {
+      type: Boolean,
+      "default": false
+    },
+    assist: {
+      type: String,
+      "default": ''
+    }
+  },
+  data: function data() {
+    return {
+      MField: {
+        value: null,
+        showPassword: false,
+        typePassword: false,
+        focused: false,
+        disabled: false,
+        correct: false,
+        error: true
+      },
+      id: '',
+      showPassword: false
+    };
+  },
+  provide: function provide() {
+    return {
+      MField: this.MField
+    };
+  },
+  computed: {
+    isPassword: function isPassword() {
+      return this.MField.typePassword === true;
+    },
+    additionalClasses: function additionalClasses() {
+      return {
+        'f-filled': this.vModel !== '',
+        'f-error': this.error,
+        'f-correct': this.correct,
+        'f-icon': this.error || this.typePassword
+      };
+    },
+    getType: function getType() {
+      if (this.isPassword) {
+        return this.showPassword ? '' : this.type;
+      } else {
+        return this.type;
+      }
+    }
+  },
+  mounted: function mounted() {
+    console.log(this);
+  }
+};
+
+/* script */
+var __vue_script__$2 = script$2;
+/* template */
+
+var __vue_render__$2 = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c('div', {
+    staticClass: "m-field"
+  }, [_vm._t("default"), _vm._v(" "), _vm.isPassword && _vm.showPassword === false ? _c('icon-eye', {
     staticClass: "a-icon f-input",
     attrs: {
       "size": 26
@@ -422,35 +711,35 @@ var __vue_render__ = function __vue_render__() {
     "class": {
       'f-error': _vm.error
     }
-  }, [_vm._v("\n    " + _vm._s(_vm.assist) + "\n  ")])], 1);
+  }, [_vm._v("\n      " + _vm._s(_vm.assist) + "\n    ")])], 2);
 };
 
-var __vue_staticRenderFns__ = [];
+var __vue_staticRenderFns__$2 = [];
 /* style */
 
-var __vue_inject_styles__ = undefined;
+var __vue_inject_styles__$2 = undefined;
 /* scoped */
 
-var __vue_scope_id__ = undefined;
+var __vue_scope_id__$2 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__ = undefined;
+var __vue_module_identifier__$2 = undefined;
 /* functional template */
 
-var __vue_is_functional_template__ = false;
+var __vue_is_functional_template__$2 = false;
 /* style inject */
 
 /* style inject SSR */
 
 /* style inject shadow dom */
 
-var __vue_component__ = normalizeComponent({
-  render: __vue_render__,
-  staticRenderFns: __vue_staticRenderFns__
-}, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, false, undefined, undefined, undefined);
+var __vue_component__$2 = normalizeComponent({
+  render: __vue_render__$2,
+  staticRenderFns: __vue_staticRenderFns__$2
+}, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2, __vue_module_identifier__$2, false, undefined, undefined, undefined);
 
 //
-var script$1 = {
+var script$3 = {
   name: 'm-select',
   components: {
     IconCancel: IconCancel
@@ -620,10 +909,10 @@ var script$1 = {
 };
 
 /* script */
-var __vue_script__$1 = script$1;
+var __vue_script__$3 = script$3;
 /* template */
 
-var __vue_render__$1 = function __vue_render__() {
+var __vue_render__$3 = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -730,31 +1019,31 @@ var __vue_render__$1 = function __vue_render__() {
   }), 0) : _vm._e()], 1);
 };
 
-var __vue_staticRenderFns__$1 = [];
+var __vue_staticRenderFns__$3 = [];
 /* style */
 
-var __vue_inject_styles__$1 = undefined;
+var __vue_inject_styles__$3 = undefined;
 /* scoped */
 
-var __vue_scope_id__$1 = undefined;
+var __vue_scope_id__$3 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$1 = undefined;
+var __vue_module_identifier__$3 = undefined;
 /* functional template */
 
-var __vue_is_functional_template__$1 = false;
+var __vue_is_functional_template__$3 = false;
 /* style inject */
 
 /* style inject SSR */
 
 /* style inject shadow dom */
 
-var __vue_component__$1 = normalizeComponent({
-  render: __vue_render__$1,
-  staticRenderFns: __vue_staticRenderFns__$1
-}, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, false, undefined, undefined, undefined);
+var __vue_component__$3 = normalizeComponent({
+  render: __vue_render__$3,
+  staticRenderFns: __vue_staticRenderFns__$3
+}, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$3, false, undefined, undefined, undefined);
 
-var script$2 = {
+var script$4 = {
   name: 'm-resize-auto',
   methods: {
     resize: function resize(event) {
@@ -777,35 +1066,35 @@ var script$2 = {
 };
 
 /* script */
-var __vue_script__$2 = script$2;
+var __vue_script__$4 = script$4;
 /* template */
 
 /* style */
 
-var __vue_inject_styles__$2 = undefined;
+var __vue_inject_styles__$4 = undefined;
 /* scoped */
 
-var __vue_scope_id__$2 = undefined;
+var __vue_scope_id__$4 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$2 = undefined;
+var __vue_module_identifier__$4 = undefined;
 /* functional template */
 
-var __vue_is_functional_template__$2 = undefined;
+var __vue_is_functional_template__$4 = undefined;
 /* style inject */
 
 /* style inject SSR */
 
 /* style inject shadow dom */
 
-var __vue_component__$2 = normalizeComponent({}, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2, __vue_module_identifier__$2, false, undefined, undefined, undefined);
+var __vue_component__$4 = normalizeComponent({}, __vue_inject_styles__$4, __vue_script__$4, __vue_scope_id__$4, __vue_is_functional_template__$4, __vue_module_identifier__$4, false, undefined, undefined, undefined);
 
 //
-var script$3 = {
+var script$5 = {
   name: 'm-textarea',
   mixins: [mixins.vModel],
   components: {
-    MResizeAuto: __vue_component__$2,
+    MResizeAuto: __vue_component__$4,
     IconAlert: IconAlert,
     IconCheckBold: IconCheckBold
   },
@@ -864,10 +1153,10 @@ var script$3 = {
 };
 
 /* script */
-var __vue_script__$3 = script$3;
+var __vue_script__$5 = script$5;
 /* template */
 
-var __vue_render__$2 = function __vue_render__() {
+var __vue_render__$4 = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -875,7 +1164,7 @@ var __vue_render__$2 = function __vue_render__() {
   var _c = _vm._self._c || _h;
 
   return _c('div', {
-    staticClass: "m-input"
+    staticClass: "m-field"
   }, [_c('m-resize-auto', {
     scopedSlots: _vm._u([{
       key: "default",
@@ -936,34 +1225,36 @@ var __vue_render__$2 = function __vue_render__() {
   }, [_vm._v("\n    " + _vm._s(_vm.assist) + "\n  ")])], 1);
 };
 
-var __vue_staticRenderFns__$2 = [];
+var __vue_staticRenderFns__$4 = [];
 /* style */
 
-var __vue_inject_styles__$3 = undefined;
+var __vue_inject_styles__$5 = undefined;
 /* scoped */
 
-var __vue_scope_id__$3 = undefined;
+var __vue_scope_id__$5 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$3 = undefined;
+var __vue_module_identifier__$5 = undefined;
 /* functional template */
 
-var __vue_is_functional_template__$3 = false;
+var __vue_is_functional_template__$5 = false;
 /* style inject */
 
 /* style inject SSR */
 
 /* style inject shadow dom */
 
-var __vue_component__$3 = normalizeComponent({
-  render: __vue_render__$2,
-  staticRenderFns: __vue_staticRenderFns__$2
-}, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$3, false, undefined, undefined, undefined);
+var __vue_component__$5 = normalizeComponent({
+  render: __vue_render__$4,
+  staticRenderFns: __vue_staticRenderFns__$4
+}, __vue_inject_styles__$5, __vue_script__$5, __vue_scope_id__$5, __vue_is_functional_template__$5, __vue_module_identifier__$5, false, undefined, undefined, undefined);
 
 var components = {
-  MInput: __vue_component__,
-  MSelect: __vue_component__$1,
-  MTextarea: __vue_component__$3
+  AInput: __vue_component__,
+  ALabel: __vue_component__$1,
+  MField: __vue_component__$2,
+  MSelect: __vue_component__$3,
+  MTextarea: __vue_component__$5
 };
 var index = Object.assign(Object.assign({}, components), {}, {
   install: function install(Vue, options) {

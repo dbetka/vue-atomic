@@ -555,7 +555,7 @@
 .f-w-auto {
   width: auto !important; }
 
-.m-input {
+.m-field {
   position: relative;
   display: flex;
   flex-direction: column;
