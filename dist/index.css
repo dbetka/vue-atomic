@@ -708,7 +708,7 @@
   .a-input.f-correct {
     border-color: green; }
 
-.a-field.f-error {
+.a-input.f-error {
   padding: 14px;
     padding-top: 15px;
     padding-bottom: 13px;
@@ -804,13 +804,10 @@
   .a-label.f-field.f-disabled {
     color: var(--color-disabled); }
 
-.a-field:focus ~ .a-label.f-field.f-correct {
-  color: var(--color-primary); }
-
-.a-field.f-correct ~ .a-label.f-field.f-correct {
+.a-label.f-field.f-correct {
   color: var(--color-correct); }
 
-.a-field:focus ~ .a-label.f-field.f-error, .a-field.f-error ~ .a-label.f-field.f-error {
+.a-label.f-field.f-error {
   color: var(--color-error); }
 
 .a-label.f-select {

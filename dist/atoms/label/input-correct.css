@@ -555,8 +555,5 @@
 .f-w-auto {
   width: auto !important; }
 
-.a-field:focus ~ .a-label.f-field.f-correct {
-  color: var(--color-primary); }
-
-.a-field.f-correct ~ .a-label.f-field.f-correct {
+.a-label.f-field.f-correct {
   color: var(--color-correct); }

@@ -55,14 +55,6 @@ export default {
     IconCheckBold,
   },
   props: {
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    placeholder: {
-      type: String,
-      default: '',
-    },
     error: {
       type: Boolean,
       default: false,
@@ -114,5 +106,17 @@ export default {
       };
     },
   },
+  watch: {
+    error(state) {
+      this.MField.error = state
+    },
+    correct(state) {
+      this.MField.correct = state
+    },
+  },
+  created() {
+    this.MField.error = this.error
+    this.MField.correct = this.correct
+  }
 };
 </script>

@@ -555,5 +555,5 @@
 .f-w-auto {
   width: auto !important; }
 
-.a-field:focus ~ .a-label.f-field.f-error, .a-field.f-error ~ .a-label.f-field.f-error {
+.a-label.f-field.f-error {
   color: var(--color-error); }

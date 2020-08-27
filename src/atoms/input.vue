@@ -44,9 +44,9 @@ export default {
     additionalClasses () {
       return {
         'f-filled': this.vModel !== '',
-        'f-error': this.error,
-        'f-correct': this.correct,
-        'f-icon': this.error || this.defaultTypePassword,
+        'f-error': this.MField.error,
+        'f-correct': this.MField.correct,
+        'f-icon': this.MField.error || this.defaultTypePassword,
       };
     },
   },

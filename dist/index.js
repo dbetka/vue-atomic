@@ -322,9 +322,9 @@ var script = {
     additionalClasses: function additionalClasses() {
       return {
         'f-filled': this.vModel !== '',
-        'f-error': this.error,
-        'f-correct': this.correct,
-        'f-icon': this.error || this.defaultTypePassword
+        'f-error': this.MField.error,
+        'f-correct': this.MField.correct,
+        'f-icon': this.MField.error || this.defaultTypePassword
       };
     }
   },
@@ -579,15 +579,19 @@ var script$1 = {
       return this.MField.id;
     },
     hasValue: function hasValue() {
-      return this.MField.value;
+      return typeof this.MField.value === 'string' && this.MField.value !== '';
+    },
+    hasError: function hasError() {
+      return this.MField.error;
     },
     classes: function classes() {
+      var MField = this.MField;
       return {
-        'f-reduced': this.hasValue || this.MField.focused,
-        'f-focused': this.MField.focused,
-        'f-disabled': this.MField.disabled,
-        'f-correct': this.MField.correct,
-        'f-error': this.MField.error
+        'f-reduced': this.hasValue || MField.focused,
+        'f-focused': MField.focused,
+        'f-disabled': MField.disabled,
+        'f-correct': MField.correct,
+        'f-error': this.hasError
       };
     }
   }
@@ -647,14 +651,6 @@ var script$2 = {
     IconCheckBold: IconCheckBold
   },
   props: {
-    disabled: {
-      type: Boolean,
-      "default": false
-    },
-    placeholder: {
-      type: String,
-      "default": ''
-    },
     error: {
       type: Boolean,
       "default": false
@@ -678,7 +674,7 @@ var script$2 = {
         focused: false,
         disabled: false,
         correct: false,
-        error: true
+        error: false
       }
     };
   },
@@ -707,6 +703,18 @@ var script$2 = {
         'f-icon': this.error || this.isPassword
       };
     }
+  },
+  watch: {
+    error: function error(state) {
+      this.MField.error = state;
+    },
+    correct: function correct(state) {
+      this.MField.correct = state;
+    }
+  },
+  created: function created() {
+    this.MField.error = this.error;
+    this.MField.correct = this.correct;
   }
 };
 

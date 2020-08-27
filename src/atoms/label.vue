@@ -17,15 +17,19 @@ export default {
       return this.MField.id
     },
     hasValue () {
-      return this.MField.value
+      return typeof this.MField.value === 'string' && this.MField.value !== ''
+    },
+    hasError() {
+      return this.MField.error
     },
     classes() {
+      const MField = this.MField
       return {
-        'f-reduced': this.hasValue || this.MField.focused,
-        'f-focused': this.MField.focused,
-        'f-disabled': this.MField.disabled,
-        'f-correct': this.MField.correct,
-        'f-error': this.MField.error,
+        'f-reduced': this.hasValue || MField.focused,
+        'f-focused': MField.focused,
+        'f-disabled': MField.disabled,
+        'f-correct': MField.correct,
+        'f-error': this.hasError,
       }
     }
   },
