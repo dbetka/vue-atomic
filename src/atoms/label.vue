@@ -2,6 +2,7 @@
   <label
     class="a-label f-field"
     :class="classes"
+    :for="id"
   >
     <slot/>
   </label>
@@ -12,20 +13,19 @@ export default {
   name: 'a-label',
   inject: ['MField'],
   computed: {
+    id () {
+      return this.MField.id
+    },
     hasValue () {
       return this.MField.value
     },
-    isFocused () {
-      return this.MField.focused
-    },
-    isDisabled () {
-      return this.MField.disabled
-    },
     classes() {
       return {
-        'f-reduced': this.hasValue || this.isFocused,
-        'f-focused': this.isFocused,
-        'f-disabled': this.isDisabled,
+        'f-reduced': this.hasValue || this.MField.focused,
+        'f-focused': this.MField.focused,
+        'f-disabled': this.MField.disabled,
+        'f-correct': this.MField.correct,
+        'f-error': this.MField.error,
       }
     }
   },

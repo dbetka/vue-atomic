@@ -224,17 +224,7 @@ var MFieldMixin = {
       this.setFieldValue();
     },
     setLabelFor: function setLabelFor() {
-      if (this.$el.parentNode) {
-        var label = this.$el.parentNode.querySelector('label');
-
-        if (label) {
-          var forAttribute = label.getAttribute('for');
-
-          if (!forAttribute || forAttribute.indexOf('md-') >= 0) {
-            label.setAttribute('for', this.id);
-          }
-        }
-      }
+      this.MField.id = this.id;
     },
     setFormResetListener: function setFormResetListener() {
       if (!this.$el.form) {
@@ -580,24 +570,24 @@ var __vue_component__ = normalizeComponent({
 //
 //
 //
+//
 var script$1 = {
   name: 'a-label',
   inject: ['MField'],
   computed: {
+    id: function id() {
+      return this.MField.id;
+    },
     hasValue: function hasValue() {
       return this.MField.value;
     },
-    isFocused: function isFocused() {
-      return this.MField.focused;
-    },
-    isDisabled: function isDisabled() {
-      return this.MField.disabled;
-    },
     classes: function classes() {
       return {
-        'f-reduced': this.hasValue || this.isFocused,
-        'f-focused': this.isFocused,
-        'f-disabled': this.isDisabled
+        'f-reduced': this.hasValue || this.MField.focused,
+        'f-focused': this.MField.focused,
+        'f-disabled': this.MField.disabled,
+        'f-correct': this.MField.correct,
+        'f-error': this.MField.error
       };
     }
   }
@@ -616,7 +606,10 @@ var __vue_render__$1 = function __vue_render__() {
 
   return _c('label', {
     staticClass: "a-label f-field",
-    "class": _vm.classes
+    "class": _vm.classes,
+    attrs: {
+      "for": _vm.id
+    }
   }, [_vm._t("default")], 2);
 };
 
@@ -678,6 +671,7 @@ var script$2 = {
   data: function data() {
     return {
       MField: {
+        id: '',
         value: null,
         currentTypePassword: false,
         defaultTypePassword: false,
@@ -685,8 +679,7 @@ var script$2 = {
         disabled: false,
         correct: false,
         error: true
-      },
-      id: ''
+      }
     };
   },
   provide: function provide() {

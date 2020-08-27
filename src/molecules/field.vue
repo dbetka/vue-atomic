@@ -78,15 +78,15 @@ export default {
   },
   data: () => ({
     MField: {
+      id: '',
       value: null,
       currentTypePassword: false,
       defaultTypePassword: false,
       focused: false,
       disabled: false,
       correct: false,
-      error: true
+      error: false,
     },
-    id: '',
   }),
   provide () {
     return {

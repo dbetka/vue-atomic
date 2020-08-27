@@ -84,17 +84,7 @@ export default {
       this.setFieldValue()
     },
     setLabelFor () {
-      if (this.$el.parentNode) {
-        const label = this.$el.parentNode.querySelector('label')
-
-        if (label) {
-          const forAttribute = label.getAttribute('for')
-
-          if (!forAttribute || forAttribute.indexOf('md-') >= 0) {
-            label.setAttribute('for', this.id)
-          }
-        }
-      }
+      this.MField.id = this.id
     },
     setFormResetListener () {
       if (!this.$el.form) {
