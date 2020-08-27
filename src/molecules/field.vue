@@ -9,17 +9,17 @@
 <!--      {{ placeholder }}-->
 <!--    </label>-->
     <icon-eye
-      v-if="isPassword && showPassword === false"
+      v-if="isPassword && passwordShown === false"
       class="a-icon f-input"
 
       :size="26"
-      @click="showPassword = true"
+      @click="passwordShown = true"
     />
     <icon-eye-off
-      v-if="isPassword && showPassword"
+      v-if="isPassword && passwordShown"
       class="a-icon f-input"
       :size="26"
-      @click="showPassword = false"
+      @click="passwordShown = false"
     />
     <icon-alert
       v-if="error && isPassword === false"
@@ -63,10 +63,6 @@ export default {
       type: String,
       default: '',
     },
-    type: {
-      type: String,
-      default: '',
-    },
     error: {
       type: Boolean,
       default: false,
@@ -83,15 +79,14 @@ export default {
   data: () => ({
     MField: {
       value: null,
-      showPassword: false,
-      typePassword: false,
+      currentTypePassword: false,
+      defaultTypePassword: false,
       focused: false,
       disabled: false,
       correct: false,
       error: true
     },
     id: '',
-    showPassword: false,
   }),
   provide () {
     return {
@@ -100,26 +95,24 @@ export default {
   },
   computed: {
     isPassword () {
-      return this.MField.typePassword === true;
+      return this.MField.defaultTypePassword === true;
+    },
+    passwordShown: {
+      get() {
+        return this.MField.currentTypePassword === false;
+      },
+      set(passwordShown) {
+        this.MField.currentTypePassword = passwordShown === false
+      }
     },
     additionalClasses () {
       return {
         'f-filled': this.vModel !== '',
         'f-error': this.error,
         'f-correct': this.correct,
-        'f-icon': this.error || this.typePassword,
+        'f-icon': this.error || this.isPassword,
       };
     },
-    getType () {
-      if (this.isPassword) {
-        return this.showPassword ? '' : this.type;
-      } else {
-        return this.type;
-      }
-    },
   },
-  mounted() {
-    console.log(this);
-  }
 };
 </script>

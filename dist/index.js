@@ -285,10 +285,11 @@ var MFieldMixin = {
     }
   },
   created: function created() {
-    this.setFieldValue(); // this.setPlaceholder()
-    // this.setDisabled()
-    // this.setRequired()
-    // this.setMaxlength()
+    this.setFieldValue();
+    this.setPlaceholder();
+    this.setDisabled();
+    this.setRequired();
+    this.setMaxlength();
   },
   mounted: function mounted() {
     this.setLabelFor();
@@ -317,10 +318,10 @@ var script = {
     }
   },
   computed: {
-    toggleType: function toggleType() {
-      return this.MField.typePassword;
+    currentTypePassword: function currentTypePassword() {
+      return this.MField.currentTypePassword;
     },
-    isPassword: function isPassword() {
+    defaultTypePassword: function defaultTypePassword() {
       return this.type === 'password';
     },
     listeners: function listeners() {
@@ -333,26 +334,26 @@ var script = {
         'f-filled': this.vModel !== '',
         'f-error': this.error,
         'f-correct': this.correct,
-        'f-icon': this.error || this.isPassword
+        'f-icon': this.error || this.defaultTypePassword
       };
     }
   },
   watch: {
-    type: function type(_type) {
-      this.setPassword(this.isPassword);
+    type: function type() {
+      this.setPassword(this.defaultTypePassword);
     },
-    toggleType: function toggleType(toggle) {
+    currentTypePassword: function currentTypePassword(toggle) {
       if (toggle) {
-        this.setTypeText();
-      } else {
         this.setTypePassword();
+      } else {
+        this.setTypeText();
       }
     }
   },
   methods: {
     setPassword: function setPassword(state) {
-      this.MField.typePassword = state;
-      this.MField.showPassword = false;
+      this.MField.defaultTypePassword = state;
+      this.MField.currentTypePassword = state;
     },
     setTypePassword: function setTypePassword() {
       this.$el.type = 'password';
@@ -362,9 +363,7 @@ var script = {
     }
   },
   created: function created() {
-    this.setPassword(this.isPassword);
-    this.$attrs.slot = 'input';
-    console.log(this.$attrs);
+    this.setPassword(this.defaultTypePassword);
   },
   beforeDestroy: function beforeDestroy() {
     this.setPassword(false);
@@ -457,7 +456,7 @@ var __vue_render__ = function __vue_render__() {
 
   var _c = _vm._self._c || _h;
 
-  return _c('input', _vm._g({
+  return _vm.attributes.type === 'checkbox' ? _c('input', _vm._g(_vm._b({
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -467,7 +466,69 @@ var __vue_render__ = function __vue_render__() {
     staticClass: "a-input",
     "class": _vm.additionalClasses,
     attrs: {
-      "id": _vm.id
+      "id": _vm.id,
+      "type": "checkbox"
+    },
+    domProps: {
+      "checked": Array.isArray(_vm.vModel) ? _vm._i(_vm.vModel, null) > -1 : _vm.vModel
+    },
+    on: {
+      "focus": _vm.onFocus,
+      "blur": _vm.onBlur,
+      "change": function change($event) {
+        var $$a = _vm.vModel,
+            $$el = $event.target,
+            $$c = $$el.checked ? true : false;
+
+        if (Array.isArray($$a)) {
+          var $$v = null,
+              $$i = _vm._i($$a, $$v);
+
+          if ($$el.checked) {
+            $$i < 0 && (_vm.vModel = $$a.concat([$$v]));
+          } else {
+            $$i > -1 && (_vm.vModel = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+          }
+        } else {
+          _vm.vModel = $$c;
+        }
+      }
+    }
+  }, 'input', _vm.attributes, false), _vm.listeners)) : _vm.attributes.type === 'radio' ? _c('input', _vm._g(_vm._b({
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.vModel,
+      expression: "vModel"
+    }],
+    staticClass: "a-input",
+    "class": _vm.additionalClasses,
+    attrs: {
+      "id": _vm.id,
+      "type": "radio"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.vModel, null)
+    },
+    on: {
+      "focus": _vm.onFocus,
+      "blur": _vm.onBlur,
+      "change": function change($event) {
+        _vm.vModel = null;
+      }
+    }
+  }, 'input', _vm.attributes, false), _vm.listeners)) : _c('input', _vm._g(_vm._b({
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.vModel,
+      expression: "vModel"
+    }],
+    staticClass: "a-input",
+    "class": _vm.additionalClasses,
+    attrs: {
+      "id": _vm.id,
+      "type": _vm.attributes.type
     },
     domProps: {
       "value": _vm.vModel
@@ -483,7 +544,7 @@ var __vue_render__ = function __vue_render__() {
         _vm.vModel = $event.target.value;
       }
     }
-  }, _vm.listeners));
+  }, 'input', _vm.attributes, false), _vm.listeners));
 };
 
 var __vue_staticRenderFns__ = [];
@@ -601,10 +662,6 @@ var script$2 = {
       type: String,
       "default": ''
     },
-    type: {
-      type: String,
-      "default": ''
-    },
     error: {
       type: Boolean,
       "default": false
@@ -622,15 +679,14 @@ var script$2 = {
     return {
       MField: {
         value: null,
-        showPassword: false,
-        typePassword: false,
+        currentTypePassword: false,
+        defaultTypePassword: false,
         focused: false,
         disabled: false,
         correct: false,
         error: true
       },
-      id: '',
-      showPassword: false
+      id: ''
     };
   },
   provide: function provide() {
@@ -640,26 +696,24 @@ var script$2 = {
   },
   computed: {
     isPassword: function isPassword() {
-      return this.MField.typePassword === true;
+      return this.MField.defaultTypePassword === true;
+    },
+    passwordShown: {
+      get: function get() {
+        return this.MField.currentTypePassword === false;
+      },
+      set: function set(passwordShown) {
+        this.MField.currentTypePassword = passwordShown === false;
+      }
     },
     additionalClasses: function additionalClasses() {
       return {
         'f-filled': this.vModel !== '',
         'f-error': this.error,
         'f-correct': this.correct,
-        'f-icon': this.error || this.typePassword
+        'f-icon': this.error || this.isPassword
       };
-    },
-    getType: function getType() {
-      if (this.isPassword) {
-        return this.showPassword ? '' : this.type;
-      } else {
-        return this.type;
-      }
     }
-  },
-  mounted: function mounted() {
-    console.log(this);
   }
 };
 
@@ -676,24 +730,24 @@ var __vue_render__$2 = function __vue_render__() {
 
   return _c('div', {
     staticClass: "m-field"
-  }, [_vm._t("default"), _vm._v(" "), _vm.isPassword && _vm.showPassword === false ? _c('icon-eye', {
+  }, [_vm._t("default"), _vm._v(" "), _vm.isPassword && _vm.passwordShown === false ? _c('icon-eye', {
     staticClass: "a-icon f-input",
     attrs: {
       "size": 26
     },
     on: {
       "click": function click($event) {
-        _vm.showPassword = true;
+        _vm.passwordShown = true;
       }
     }
-  }) : _vm._e(), _vm._v(" "), _vm.isPassword && _vm.showPassword ? _c('icon-eye-off', {
+  }) : _vm._e(), _vm._v(" "), _vm.isPassword && _vm.passwordShown ? _c('icon-eye-off', {
     staticClass: "a-icon f-input",
     attrs: {
       "size": 26
     },
     on: {
       "click": function click($event) {
-        _vm.showPassword = false;
+        _vm.passwordShown = false;
       }
     }
   }) : _vm._e(), _vm._v(" "), _vm.error && _vm.isPassword === false ? _c('icon-alert', {

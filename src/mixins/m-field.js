@@ -144,10 +144,10 @@ export default {
   },
   created () {
     this.setFieldValue()
-    // this.setPlaceholder()
-    // this.setDisabled()
-    // this.setRequired()
-    // this.setMaxlength()
+    this.setPlaceholder()
+    this.setDisabled()
+    this.setRequired()
+    this.setMaxlength()
   },
   mounted () {
     this.setLabelFor()

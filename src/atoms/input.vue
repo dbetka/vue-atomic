@@ -2,6 +2,7 @@
   <input
     :id="id"
     class="a-input"
+    v-bind="attributes"
     :class="additionalClasses"
     v-on="listeners"
     v-model="vModel"
@@ -29,10 +30,10 @@ export default {
     },
   },
   computed: {
-    toggleType () {
-      return this.MField.typePassword;
+    currentTypePassword () {
+      return this.MField.currentTypePassword;
     },
-    isPassword () {
+    defaultTypePassword () {
       return this.type === 'password';
     },
     listeners () {
@@ -45,26 +46,26 @@ export default {
         'f-filled': this.vModel !== '',
         'f-error': this.error,
         'f-correct': this.correct,
-        'f-icon': this.error || this.isPassword,
+        'f-icon': this.error || this.defaultTypePassword,
       };
     },
   },
   watch: {
-    type (type) {
-      this.setPassword(this.isPassword);
+    type () {
+      this.setPassword(this.defaultTypePassword);
     },
-    toggleType (toggle) {
+    currentTypePassword (toggle) {
       if (toggle) {
-        this.setTypeText();
-      } else {
         this.setTypePassword();
+      } else {
+        this.setTypeText();
       }
     },
   },
   methods: {
     setPassword (state) {
-      this.MField.typePassword = state;
-      this.MField.showPassword = false;
+      this.MField.defaultTypePassword = state;
+      this.MField.currentTypePassword = state;
     },
     setTypePassword () {
       this.$el.type = 'password';
@@ -74,9 +75,7 @@ export default {
     },
   },
   created () {
-    this.setPassword(this.isPassword);
-    this.$attrs.slot = 'input';
-    console.log(this.$attrs);
+    this.setPassword(this.defaultTypePassword);
   },
   beforeDestroy () {
     this.setPassword(false);
