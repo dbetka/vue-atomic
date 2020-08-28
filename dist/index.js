@@ -29,6 +29,78 @@ function _typeof(obj) {
   return _typeof(obj);
 }
 
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
+}
+
+function _createForOfIteratorHelper(o) {
+  if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) {
+    if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) {
+      var i = 0;
+
+      var F = function () {};
+
+      return {
+        s: F,
+        n: function () {
+          if (i >= o.length) return {
+            done: true
+          };
+          return {
+            done: false,
+            value: o[i++]
+          };
+        },
+        e: function (e) {
+          throw e;
+        },
+        f: F
+      };
+    }
+
+    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+
+  var it,
+      normalCompletion = true,
+      didErr = false,
+      err;
+  return {
+    s: function () {
+      it = o[Symbol.iterator]();
+    },
+    n: function () {
+      var step = it.next();
+      normalCompletion = step.done;
+      return step;
+    },
+    e: function (e) {
+      didErr = true;
+      err = e;
+    },
+    f: function () {
+      try {
+        if (!normalCompletion && it.return != null) it.return();
+      } finally {
+        if (didErr) throw err;
+      }
+    }
+  };
+}
+
 var logical = {
   isUndefined: function isUndefined(value) {
     return typeof value === 'undefined';
@@ -88,6 +160,160 @@ var vueModel = {
     this.$emit('input', value);
   }
 };
+
+var listeners = function listeners() {
+  var excludedListeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  return {
+    listeners: function listeners() {
+      var l = Object.assign({}, this.$listeners);
+
+      var _iterator = _createForOfIteratorHelper(excludedListeners),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var listenerName = _step.value;
+          delete l[listenerName];
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      return l;
+    }
+  };
+};
+
+//
+var script = {
+  name: 'a-assist',
+  inject: ['MField'],
+  computed: Object.assign(Object.assign({}, listeners()), {}, {
+    classes: function classes() {
+      return {
+        'f-error': this.MField.error
+      };
+    }
+  })
+};
+
+function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
+    if (typeof shadowMode !== 'boolean') {
+        createInjectorSSR = createInjector;
+        createInjector = shadowMode;
+        shadowMode = false;
+    }
+    // Vue.extend constructor export interop.
+    const options = typeof script === 'function' ? script.options : script;
+    // render functions
+    if (template && template.render) {
+        options.render = template.render;
+        options.staticRenderFns = template.staticRenderFns;
+        options._compiled = true;
+        // functional template
+        if (isFunctionalTemplate) {
+            options.functional = true;
+        }
+    }
+    // scopedId
+    if (scopeId) {
+        options._scopeId = scopeId;
+    }
+    let hook;
+    if (moduleIdentifier) {
+        // server build
+        hook = function (context) {
+            // 2.3 injection
+            context =
+                context || // cached call
+                    (this.$vnode && this.$vnode.ssrContext) || // stateful
+                    (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext); // functional
+            // 2.2 with runInNewContext: true
+            if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+                context = __VUE_SSR_CONTEXT__;
+            }
+            // inject component styles
+            if (style) {
+                style.call(this, createInjectorSSR(context));
+            }
+            // register component module identifier for async chunk inference
+            if (context && context._registeredComponents) {
+                context._registeredComponents.add(moduleIdentifier);
+            }
+        };
+        // used by ssr in case component is cached and beforeCreate
+        // never gets called
+        options._ssrRegister = hook;
+    }
+    else if (style) {
+        hook = shadowMode
+            ? function (context) {
+                style.call(this, createInjectorShadow(context, this.$root.$options.shadowRoot));
+            }
+            : function (context) {
+                style.call(this, createInjector(context));
+            };
+    }
+    if (hook) {
+        if (options.functional) {
+            // register for functional component in vue file
+            const originalRender = options.render;
+            options.render = function renderWithStyleInjection(h, context) {
+                hook.call(context);
+                return originalRender(h, context);
+            };
+        }
+        else {
+            // inject component registration as beforeCreate hook
+            const existing = options.beforeCreate;
+            options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+    }
+    return script;
+}
+
+/* script */
+var __vue_script__ = script;
+/* template */
+
+var __vue_render__ = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c('div', _vm._g({
+    staticClass: "a-assist",
+    "class": _vm.classes
+  }, _vm.listeners), [_vm._t("default")], 2);
+};
+
+var __vue_staticRenderFns__ = [];
+/* style */
+
+var __vue_inject_styles__ = undefined;
+/* scoped */
+
+var __vue_scope_id__ = undefined;
+/* module identifier */
+
+var __vue_module_identifier__ = undefined;
+/* functional template */
+
+var __vue_is_functional_template__ = false;
+/* style inject */
+
+/* style inject SSR */
+
+/* style inject shadow dom */
+
+var __vue_component__ = normalizeComponent({
+  render: __vue_render__,
+  staticRenderFns: __vue_staticRenderFns__
+}, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, false, undefined, undefined, undefined);
 
 var formMixin = {
   data: function data() {
@@ -291,7 +517,7 @@ var MFieldMixin = {
 };
 
 //
-var script = {
+var script$1 = {
   name: 'a-input',
   mixins: [MFieldMixin, mixins.vModel],
   inject: ['MField'],
@@ -307,19 +533,15 @@ var script = {
       "default": 'text'
     }
   },
-  computed: {
+  computed: Object.assign(Object.assign({
     currentTypePassword: function currentTypePassword() {
       return this.MField.currentTypePassword;
     },
     defaultTypePassword: function defaultTypePassword() {
       return this.type === 'password';
-    },
-    listeners: function listeners() {
-      var l = Object.assign({}, this.$listeners);
-      delete l.input;
-      return l;
-    },
-    additionalClasses: function additionalClasses() {
+    }
+  }, listeners(['input'])), {}, {
+    classes: function classes() {
       return {
         'f-filled': this.vModel !== '',
         'f-error': this.MField.error,
@@ -327,7 +549,7 @@ var script = {
         'f-icon': this.MField.error || this.defaultTypePassword
       };
     }
-  },
+  }),
   watch: {
     type: function type() {
       this.setPassword(this.defaultTypePassword);
@@ -360,86 +582,11 @@ var script = {
   }
 };
 
-function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
-    if (typeof shadowMode !== 'boolean') {
-        createInjectorSSR = createInjector;
-        createInjector = shadowMode;
-        shadowMode = false;
-    }
-    // Vue.extend constructor export interop.
-    const options = typeof script === 'function' ? script.options : script;
-    // render functions
-    if (template && template.render) {
-        options.render = template.render;
-        options.staticRenderFns = template.staticRenderFns;
-        options._compiled = true;
-        // functional template
-        if (isFunctionalTemplate) {
-            options.functional = true;
-        }
-    }
-    // scopedId
-    if (scopeId) {
-        options._scopeId = scopeId;
-    }
-    let hook;
-    if (moduleIdentifier) {
-        // server build
-        hook = function (context) {
-            // 2.3 injection
-            context =
-                context || // cached call
-                    (this.$vnode && this.$vnode.ssrContext) || // stateful
-                    (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext); // functional
-            // 2.2 with runInNewContext: true
-            if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-                context = __VUE_SSR_CONTEXT__;
-            }
-            // inject component styles
-            if (style) {
-                style.call(this, createInjectorSSR(context));
-            }
-            // register component module identifier for async chunk inference
-            if (context && context._registeredComponents) {
-                context._registeredComponents.add(moduleIdentifier);
-            }
-        };
-        // used by ssr in case component is cached and beforeCreate
-        // never gets called
-        options._ssrRegister = hook;
-    }
-    else if (style) {
-        hook = shadowMode
-            ? function (context) {
-                style.call(this, createInjectorShadow(context, this.$root.$options.shadowRoot));
-            }
-            : function (context) {
-                style.call(this, createInjector(context));
-            };
-    }
-    if (hook) {
-        if (options.functional) {
-            // register for functional component in vue file
-            const originalRender = options.render;
-            options.render = function renderWithStyleInjection(h, context) {
-                hook.call(context);
-                return originalRender(h, context);
-            };
-        }
-        else {
-            // inject component registration as beforeCreate hook
-            const existing = options.beforeCreate;
-            options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-    }
-    return script;
-}
-
 /* script */
-var __vue_script__ = script;
+var __vue_script__$1 = script$1;
 /* template */
 
-var __vue_render__ = function __vue_render__() {
+var __vue_render__$1 = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -454,7 +601,7 @@ var __vue_render__ = function __vue_render__() {
       expression: "vModel"
     }],
     staticClass: "a-input",
-    "class": _vm.additionalClasses,
+    "class": _vm.classes,
     attrs: {
       "id": _vm.id,
       "type": "checkbox"
@@ -492,7 +639,7 @@ var __vue_render__ = function __vue_render__() {
       expression: "vModel"
     }],
     staticClass: "a-input",
-    "class": _vm.additionalClasses,
+    "class": _vm.classes,
     attrs: {
       "id": _vm.id,
       "type": "radio"
@@ -515,7 +662,7 @@ var __vue_render__ = function __vue_render__() {
       expression: "vModel"
     }],
     staticClass: "a-input",
-    "class": _vm.additionalClasses,
+    "class": _vm.classes,
     attrs: {
       "id": _vm.id,
       "type": _vm.attributes.type
@@ -535,86 +682,6 @@ var __vue_render__ = function __vue_render__() {
       }
     }
   }, 'input', _vm.attributes, false), _vm.listeners));
-};
-
-var __vue_staticRenderFns__ = [];
-/* style */
-
-var __vue_inject_styles__ = undefined;
-/* scoped */
-
-var __vue_scope_id__ = undefined;
-/* module identifier */
-
-var __vue_module_identifier__ = undefined;
-/* functional template */
-
-var __vue_is_functional_template__ = false;
-/* style inject */
-
-/* style inject SSR */
-
-/* style inject shadow dom */
-
-var __vue_component__ = normalizeComponent({
-  render: __vue_render__,
-  staticRenderFns: __vue_staticRenderFns__
-}, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, false, undefined, undefined, undefined);
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var script$1 = {
-  name: 'a-label',
-  inject: ['MField'],
-  computed: {
-    id: function id() {
-      return this.MField.id;
-    },
-    hasValue: function hasValue() {
-      return typeof this.MField.value === 'string' && this.MField.value !== '';
-    },
-    hasError: function hasError() {
-      return this.MField.error;
-    },
-    classes: function classes() {
-      var MField = this.MField;
-      return {
-        'f-reduced': this.hasValue || MField.focused,
-        'f-focused': MField.focused,
-        'f-disabled': MField.disabled,
-        'f-correct': MField.correct,
-        'f-error': this.hasError
-      };
-    }
-  }
-};
-
-/* script */
-var __vue_script__$1 = script$1;
-/* template */
-
-var __vue_render__$1 = function __vue_render__() {
-  var _vm = this;
-
-  var _h = _vm.$createElement;
-
-  var _c = _vm._self._c || _h;
-
-  return _c('label', {
-    staticClass: "a-label f-field",
-    "class": _vm.classes,
-    attrs: {
-      "for": _vm.id
-    }
-  }, [_vm._t("default")], 2);
 };
 
 var __vue_staticRenderFns__$1 = [];
@@ -643,6 +710,77 @@ var __vue_component__$1 = normalizeComponent({
 
 //
 var script$2 = {
+  name: 'a-label',
+  inject: ['MField'],
+  computed: Object.assign({
+    id: function id() {
+      return this.MField.id;
+    },
+    hasValue: function hasValue() {
+      return typeof this.MField.value === 'string' && this.MField.value !== '';
+    },
+    hasError: function hasError() {
+      return this.MField.error;
+    },
+    classes: function classes() {
+      var MField = this.MField;
+      return {
+        'f-reduced': this.hasValue || MField.focused,
+        'f-focused': MField.focused,
+        'f-disabled': MField.disabled,
+        'f-correct': MField.correct,
+        'f-error': this.hasError
+      };
+    }
+  }, listeners())
+};
+
+/* script */
+var __vue_script__$2 = script$2;
+/* template */
+
+var __vue_render__$2 = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c('label', _vm._g({
+    staticClass: "a-label f-field",
+    "class": _vm.classes,
+    attrs: {
+      "for": _vm.id
+    }
+  }, _vm.listeners), [_vm._t("default")], 2);
+};
+
+var __vue_staticRenderFns__$2 = [];
+/* style */
+
+var __vue_inject_styles__$2 = undefined;
+/* scoped */
+
+var __vue_scope_id__$2 = undefined;
+/* module identifier */
+
+var __vue_module_identifier__$2 = undefined;
+/* functional template */
+
+var __vue_is_functional_template__$2 = false;
+/* style inject */
+
+/* style inject SSR */
+
+/* style inject shadow dom */
+
+var __vue_component__$2 = normalizeComponent({
+  render: __vue_render__$2,
+  staticRenderFns: __vue_staticRenderFns__$2
+}, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2, __vue_module_identifier__$2, false, undefined, undefined, undefined);
+
+//
+var script$3 = {
   name: 'm-field',
   components: {
     IconEye: IconEye,
@@ -719,10 +857,10 @@ var script$2 = {
 };
 
 /* script */
-var __vue_script__$2 = script$2;
+var __vue_script__$3 = script$3;
 /* template */
 
-var __vue_render__$2 = function __vue_render__() {
+var __vue_render__$3 = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -761,40 +899,35 @@ var __vue_render__$2 = function __vue_render__() {
     attrs: {
       "size": 26
     }
-  }) : _vm._e(), _vm._v(" "), _c('div', {
-    staticClass: "a-assist",
-    "class": {
-      'f-error': _vm.error
-    }
-  }, [_vm._v("\n      " + _vm._s(_vm.assist) + "\n    ")])], 2);
+  }) : _vm._e()], 2);
 };
 
-var __vue_staticRenderFns__$2 = [];
+var __vue_staticRenderFns__$3 = [];
 /* style */
 
-var __vue_inject_styles__$2 = undefined;
+var __vue_inject_styles__$3 = undefined;
 /* scoped */
 
-var __vue_scope_id__$2 = undefined;
+var __vue_scope_id__$3 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$2 = undefined;
+var __vue_module_identifier__$3 = undefined;
 /* functional template */
 
-var __vue_is_functional_template__$2 = false;
+var __vue_is_functional_template__$3 = false;
 /* style inject */
 
 /* style inject SSR */
 
 /* style inject shadow dom */
 
-var __vue_component__$2 = normalizeComponent({
-  render: __vue_render__$2,
-  staticRenderFns: __vue_staticRenderFns__$2
-}, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2, __vue_module_identifier__$2, false, undefined, undefined, undefined);
+var __vue_component__$3 = normalizeComponent({
+  render: __vue_render__$3,
+  staticRenderFns: __vue_staticRenderFns__$3
+}, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$3, false, undefined, undefined, undefined);
 
 //
-var script$3 = {
+var script$4 = {
   name: 'm-select',
   components: {
     IconCancel: IconCancel
@@ -964,10 +1097,10 @@ var script$3 = {
 };
 
 /* script */
-var __vue_script__$3 = script$3;
+var __vue_script__$4 = script$4;
 /* template */
 
-var __vue_render__$3 = function __vue_render__() {
+var __vue_render__$4 = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -1074,31 +1207,31 @@ var __vue_render__$3 = function __vue_render__() {
   }), 0) : _vm._e()], 1);
 };
 
-var __vue_staticRenderFns__$3 = [];
+var __vue_staticRenderFns__$4 = [];
 /* style */
 
-var __vue_inject_styles__$3 = undefined;
+var __vue_inject_styles__$4 = undefined;
 /* scoped */
 
-var __vue_scope_id__$3 = undefined;
+var __vue_scope_id__$4 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$3 = undefined;
+var __vue_module_identifier__$4 = undefined;
 /* functional template */
 
-var __vue_is_functional_template__$3 = false;
+var __vue_is_functional_template__$4 = false;
 /* style inject */
 
 /* style inject SSR */
 
 /* style inject shadow dom */
 
-var __vue_component__$3 = normalizeComponent({
-  render: __vue_render__$3,
-  staticRenderFns: __vue_staticRenderFns__$3
-}, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$3, false, undefined, undefined, undefined);
+var __vue_component__$4 = normalizeComponent({
+  render: __vue_render__$4,
+  staticRenderFns: __vue_staticRenderFns__$4
+}, __vue_inject_styles__$4, __vue_script__$4, __vue_scope_id__$4, __vue_is_functional_template__$4, __vue_module_identifier__$4, false, undefined, undefined, undefined);
 
-var script$4 = {
+var script$5 = {
   name: 'm-resize-auto',
   methods: {
     resize: function resize(event) {
@@ -1121,35 +1254,35 @@ var script$4 = {
 };
 
 /* script */
-var __vue_script__$4 = script$4;
+var __vue_script__$5 = script$5;
 /* template */
 
 /* style */
 
-var __vue_inject_styles__$4 = undefined;
+var __vue_inject_styles__$5 = undefined;
 /* scoped */
 
-var __vue_scope_id__$4 = undefined;
+var __vue_scope_id__$5 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$4 = undefined;
+var __vue_module_identifier__$5 = undefined;
 /* functional template */
 
-var __vue_is_functional_template__$4 = undefined;
+var __vue_is_functional_template__$5 = undefined;
 /* style inject */
 
 /* style inject SSR */
 
 /* style inject shadow dom */
 
-var __vue_component__$4 = normalizeComponent({}, __vue_inject_styles__$4, __vue_script__$4, __vue_scope_id__$4, __vue_is_functional_template__$4, __vue_module_identifier__$4, false, undefined, undefined, undefined);
+var __vue_component__$5 = normalizeComponent({}, __vue_inject_styles__$5, __vue_script__$5, __vue_scope_id__$5, __vue_is_functional_template__$5, __vue_module_identifier__$5, false, undefined, undefined, undefined);
 
 //
-var script$5 = {
+var script$6 = {
   name: 'm-textarea',
   mixins: [mixins.vModel],
   components: {
-    MResizeAuto: __vue_component__$4,
+    MResizeAuto: __vue_component__$5,
     IconAlert: IconAlert,
     IconCheckBold: IconCheckBold
   },
@@ -1208,10 +1341,10 @@ var script$5 = {
 };
 
 /* script */
-var __vue_script__$5 = script$5;
+var __vue_script__$6 = script$6;
 /* template */
 
-var __vue_render__$4 = function __vue_render__() {
+var __vue_render__$5 = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -1280,36 +1413,37 @@ var __vue_render__$4 = function __vue_render__() {
   }, [_vm._v("\n    " + _vm._s(_vm.assist) + "\n  ")])], 1);
 };
 
-var __vue_staticRenderFns__$4 = [];
+var __vue_staticRenderFns__$5 = [];
 /* style */
 
-var __vue_inject_styles__$5 = undefined;
+var __vue_inject_styles__$6 = undefined;
 /* scoped */
 
-var __vue_scope_id__$5 = undefined;
+var __vue_scope_id__$6 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$5 = undefined;
+var __vue_module_identifier__$6 = undefined;
 /* functional template */
 
-var __vue_is_functional_template__$5 = false;
+var __vue_is_functional_template__$6 = false;
 /* style inject */
 
 /* style inject SSR */
 
 /* style inject shadow dom */
 
-var __vue_component__$5 = normalizeComponent({
-  render: __vue_render__$4,
-  staticRenderFns: __vue_staticRenderFns__$4
-}, __vue_inject_styles__$5, __vue_script__$5, __vue_scope_id__$5, __vue_is_functional_template__$5, __vue_module_identifier__$5, false, undefined, undefined, undefined);
+var __vue_component__$6 = normalizeComponent({
+  render: __vue_render__$5,
+  staticRenderFns: __vue_staticRenderFns__$5
+}, __vue_inject_styles__$6, __vue_script__$6, __vue_scope_id__$6, __vue_is_functional_template__$6, __vue_module_identifier__$6, false, undefined, undefined, undefined);
 
 var components = {
-  AInput: __vue_component__,
-  ALabel: __vue_component__$1,
-  MField: __vue_component__$2,
-  MSelect: __vue_component__$3,
-  MTextarea: __vue_component__$5
+  AAssist: __vue_component__,
+  AInput: __vue_component__$1,
+  ALabel: __vue_component__$2,
+  MField: __vue_component__$3,
+  MSelect: __vue_component__$4,
+  MTextarea: __vue_component__$6
 };
 var index = Object.assign(Object.assign({}, components), {}, {
   install: function install(Vue, options) {

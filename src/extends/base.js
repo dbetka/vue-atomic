@@ -71,10 +71,21 @@ const minimizeIfMobile = () => {
   }
 };
 
+const listeners = (excludedListeners = []) => ({
+  listeners: function() {
+    const l = { ...this.$listeners };
+    for (const listenerName of excludedListeners) {
+      delete l[listenerName];
+    }
+    return l;
+  }
+});
+
 export {
   vueModel,
   vuexVModel,
   mapVuexVModel,
   blockWhenIsLoading,
   minimizeIfMobile,
+  listeners,
 };

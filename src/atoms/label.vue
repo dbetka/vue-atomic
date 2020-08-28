@@ -2,6 +2,7 @@
   <label
     class="a-label f-field"
     :class="classes"
+    v-on="listeners"
     :for="id"
   >
     <slot/>
@@ -9,6 +10,8 @@
 </template>
 
 <script>
+import { listeners } from '../extends/base';
+
 export default {
   name: 'a-label',
   inject: ['MField'],
@@ -31,7 +34,8 @@ export default {
         'f-correct': MField.correct,
         'f-error': this.hasError,
       }
-    }
+    },
+    ...listeners(),
   },
 };
 </script>

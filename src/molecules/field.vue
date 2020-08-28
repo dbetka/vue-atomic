@@ -1,13 +1,6 @@
 <template>
   <div class="m-field">
     <slot/>
-<!--    <label-->
-<!--      class="a-label f-field"-->
-<!--      :class="{ 'f-correct': correct, 'f-error': error }"-->
-<!--      :for="id"-->
-<!--    >-->
-<!--      {{ placeholder }}-->
-<!--    </label>-->
     <icon-eye
       v-if="isPassword && passwordShown === false"
       class="a-icon f-input"
@@ -31,12 +24,6 @@
       class="a-icon f-input f-correct"
       :size="26"
     />
-    <div
-      class="a-assist"
-      :class="{ 'f-error': error }"
-    >
-      {{ assist }}
-    </div>
   </div>
 </template>
 

@@ -1,3 +1,4 @@
+import AAssist from './atoms/assist.vue';
 import AInput from './atoms/input.vue';
 import ALabel from './atoms/label.vue';
 
@@ -6,6 +7,7 @@ import MSelect from './molecules/select.vue';
 import MTextarea from './molecules/textarea.vue';
 
 const components = {
+  AAssist,
   AInput,
   ALabel,
   MField,

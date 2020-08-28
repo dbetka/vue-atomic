@@ -3,7 +3,7 @@
     :id="id"
     class="a-input"
     v-bind="attributes"
-    :class="additionalClasses"
+    :class="classes"
     v-on="listeners"
     v-model="vModel"
     @focus="onFocus"
@@ -14,6 +14,7 @@
 <script>
 import { mixins } from '../mixins/base';
 import MFieldMixin from '../mixins/m-field'
+import { listeners } from '../extends/base';
 
 export default {
   name: 'a-input',
@@ -36,12 +37,8 @@ export default {
     defaultTypePassword () {
       return this.type === 'password';
     },
-    listeners () {
-      var l = { ...this.$listeners };
-      delete l.input;
-      return l;
-    },
-    additionalClasses () {
+    ...listeners(['input']),
+    classes () {
       return {
         'f-filled': this.vModel !== '',
         'f-error': this.MField.error,
